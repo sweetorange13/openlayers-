@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)http://openlayers.org/en/latest/examples/image-load-events.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./图像加载事件_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./图像加载事件_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./图像加载事件_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./图像加载事件_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./图像加载事件_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./图像加载事件_files/image-load-events.css">
+    <script src="./图像加载事件_files/polyfill.min.js.下载"></script>
+    <script src="./图像加载事件_files/ZeroClipboard.min.js.下载"></script>
+    <title>图像加载事件</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./图像加载事件_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./图像加载事件_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/image-load-events.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">图像加载事件</font></font></h4>
+          <div class="wrapper">
+  <div id="map" class="map"><div class="ol-viewport" data-view="3" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed" style="display: none;"><ul><li style="display: none;"></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+  <div id="progress" style="visibility: hidden; width: 0px;"></div>
+</div>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用图像加载事件的示例。</font></font></p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">图像源与图像加载有关的事件。</font><font style="vertical-align: inherit;">你可以听的</font></font><code>imageloadstart</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><code>imageloadend</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">和</font></font><code>imageloaderror</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">类型的事件监控图像加载进度。</font><font style="vertical-align: inherit;">此示例注册这些事件的侦听器，并在地图底部渲染图像加载进度条。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Image.html" title="ol.layer.Image的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Image</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.ImageWMS.html" title="ol.source.ImageWMS的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.ImageWMS</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Image Load Events</textarea>
+          <textarea class="hidden" name="description">Example using image load events.</textarea>
+          <textarea class="hidden" name="js">/**
+ * Renders a progress bar.
+ * @param {Element} el The target element.
+ * @constructor
+ */
+function Progress(el) {
+  this.el = el;
+  this.loading = 0;
+  this.loaded = 0;
+}
+
+
+/**
+ * Increment the count of loading tiles.
+ */
+Progress.prototype.addLoading = function() {
+  if (this.loading === 0) {
+    this.show();
+  }
+  ++this.loading;
+  this.update();
+};
+
+
+/**
+ * Increment the count of loaded tiles.
+ */
+Progress.prototype.addLoaded = function() {
+  var this_ = this;
+  setTimeout(function() {
+    ++this_.loaded;
+    this_.update();
+  }, 100);
+};
+
+
+/**
+ * Update the progress bar.
+ */
+Progress.prototype.update = function() {
+  var width = (this.loaded / this.loading * 100).toFixed(1) + '%';
+  this.el.style.width = width;
+  if (this.loading === this.loaded) {
+    this.loading = 0;
+    this.loaded = 0;
+    var this_ = this;
+    setTimeout(function() {
+      this_.hide();
+    }, 500);
+  }
+};
+
+
+/**
+ * Show the progress bar.
+ */
+Progress.prototype.show = function() {
+  this.el.style.visibility = 'visible';
+};
+
+
+/**
+ * Hide the progress bar.
+ */
+Progress.prototype.hide = function() {
+  if (this.loading === this.loaded) {
+    this.el.style.visibility = 'hidden';
+    this.el.style.width = 0;
+  }
+};
+
+var progress = new Progress(document.getElementById('progress'));
+
+var source = new ol.source.ImageWMS({
+  url: 'https://ahocevar.com/geoserver/wms',
+  params: {'LAYERS': 'topp:states'},
+  serverType: 'geoserver'
+});
+
+source.on('imageloadstart', function() {
+  progress.addLoading();
+});
+
+source.on('imageloadend', function() {
+  progress.addLoaded();
+});
+source.on('imageloaderror', function() {
+  progress.addLoaded();
+});
+
+var map = new ol.Map({
+  logo: false,
+  layers: [
+    new ol.layer.Image({source: source})
+  ],
+  target: 'map',
+  view: new ol.View({
+    center: [-10997148, 4569099],
+    zoom: 4
+  })
+});
+</textarea>
+          <textarea class="hidden" name="css">.map {
+  background: #E0ECED;
+}
+.wrapper {
+  position: relative;
+}
+#progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: rgba(0, 60, 136, 0.4);
+  width: 0;
+  transition: width 250ms;
+}</textarea>
+          <textarea class="hidden" name="html">&lt;div class="wrapper"&gt;
+  &lt;div id="map" class="map"&gt;&lt;/div&gt;
+  &lt;div id="progress"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Image Load Events<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">.map </span><span class="token punctuation">{</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> #E0ECED<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.wrapper </span><span class="token punctuation">{</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">#progress </span><span class="token punctuation">{</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+        <span class="token property">bottom</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+        <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> 2px<span class="token punctuation">;</span>
+        <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">rgba</span>(0, 60, 136, 0.4)<span class="token punctuation">;</span>
+        <span class="token property">width</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+        <span class="token property">transition</span><span class="token punctuation">:</span> width 250ms<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>wrapper<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>progress<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment" spellcheck="true">/**
+       * Renders a progress bar.
+       * @param {Element} el The target element.
+       * @constructor
+       */</span>
+      <span class="token keyword">function</span> <span class="token function">Progress</span><span class="token punctuation">(</span>el<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>el <span class="token operator">=</span> el<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>loaded <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Increment the count of loading tiles.
+       */</span>
+      Progress<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>addLoading <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token operator">++</span><span class="token keyword">this</span><span class="token punctuation">.</span>loading<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Increment the count of loaded tiles.
+       */</span>
+      Progress<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>addLoaded <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> this_ <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+        <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token operator">++</span>this_<span class="token punctuation">.</span>loaded<span class="token punctuation">;</span>
+          this_<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Update the progress bar.
+       */</span>
+      Progress<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>update <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> width <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>loaded <span class="token operator">/</span> <span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toFixed</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">'%'</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>width <span class="token operator">=</span> width<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">===</span> <span class="token keyword">this</span><span class="token punctuation">.</span>loaded<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>loaded <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> this_ <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">;</span>
+          <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            this_<span class="token punctuation">.</span><span class="token function">hide</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Show the progress bar.
+       */</span>
+      Progress<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>show <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>visibility <span class="token operator">=</span> <span class="token string">'visible'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Hide the progress bar.
+       */</span>
+      Progress<span class="token punctuation">.</span>prototype<span class="token punctuation">.</span>hide <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>loading <span class="token operator">===</span> <span class="token keyword">this</span><span class="token punctuation">.</span>loaded<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>visibility <span class="token operator">=</span> <span class="token string">'hidden'</span><span class="token punctuation">;</span>
+          <span class="token keyword">this</span><span class="token punctuation">.</span>el<span class="token punctuation">.</span>style<span class="token punctuation">.</span>width <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> progress <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Progress</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'progress'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> source <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>ImageWMS</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        url<span class="token punctuation">:</span> <span class="token string">'https://ahocevar.com/geoserver/wms'</span><span class="token punctuation">,</span>
+        params<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'LAYERS'</span><span class="token punctuation">:</span> <span class="token string">'topp:states'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        serverType<span class="token punctuation">:</span> <span class="token string">'geoserver'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      source<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'imageloadstart'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        progress<span class="token punctuation">.</span><span class="token function">addLoading</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      source<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'imageloadend'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        progress<span class="token punctuation">.</span><span class="token function">addLoaded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      source<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'imageloaderror'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        progress<span class="token punctuation">.</span><span class="token function">addLoaded</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        logo<span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">,</span>
+        layers<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+          <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Image</span><span class="token punctuation">(</span><span class="token punctuation">{</span>source<span class="token punctuation">:</span> source<span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> <span class="token string">'map'</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          center<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">10997148</span><span class="token punctuation">,</span> <span class="token number">4569099</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          zoom<span class="token punctuation">:</span> <span class="token number">4</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./图像加载事件_files/common.js.下载"></script>
+    <script src="./图像加载事件_files/prism.min.js.下载"></script>
+    <script src="./图像加载事件_files/loader.js.下载"></script><script type="text/javascript" src="./图像加载事件_files/ol.js.下载"></script><script type="text/javascript" src="./图像加载事件_files/image-load-events.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./图像加载事件_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

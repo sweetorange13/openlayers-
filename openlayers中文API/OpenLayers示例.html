@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)http://openlayers.org/en/latest/examples/index.html -->
+<html lang="en" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./OpenLayers示例_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./OpenLayers示例_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./OpenLayers示例_files/layout.css" type="text/css">
+    <style>
+      body {
+        padding-top: 70px;
+      }
+      input.search-query {
+        color: #333;
+      }
+      .example {
+        display: block;
+        padding: 10px;
+        background-color: #F5F5F5;
+        height: 140px;
+        margin: 10px 0;
+        overflow: auto;
+      }
+      .example p.description {
+        font-size: smaller;
+        margin: 5px 0;
+      }
+      .example:hover {
+        background-color: #ddd;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-button {
+        width: 0;
+        height: 0;
+        display: none;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.10),inset 0 -1px 0 rgba(0, 0, 0, 0.07);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      ::-webkit-scrollbar-corner {
+        background-color: transparent;
+      }
+    </style>
+    <script type="text/javascript" src="./OpenLayers示例_files/Jugl.js.下载"></script>
+    <script type="text/javascript" src="./OpenLayers示例_files/index.js.下载"></script>
+    <script type="text/javascript">
+      var template, target;
+
+      function listExamples(examples) {
+        target.innerHTML = "";
+        var node = template.process({
+          context: {examples: examples},
+          clone: true,
+          parent: target
+        });
+        document.getElementById("count").innerHTML = "(" + examples.length + ")";
+      }
+
+      var timerId;
+      function inputChange() {
+        if (timerId) {
+          window.clearTimeout(timerId);
+        }
+        var text = this.value;
+        timerId = window.setTimeout(function() {
+          filterList(text);
+        }, 500);
+      }
+
+      function filterList(text) {
+        var examples;
+        if (text.length < 2) {
+          examples = info.examples;
+        } else {
+          var words = text.split(/\W+/);
+          var scores = {};
+          for(var i=0; i<words.length; ++i) {
+            var word = words[i].toLowerCase();
+            var dict = info.index[word];
+            var updateScores = function() {
+              for(exIndex in dict) {
+                var count = dict[exIndex];
+                if(scores[exIndex]) {
+                  if(scores[exIndex][word]) {
+                    scores[exIndex][word] += count;
+                  } else {
+                    scores[exIndex][word] = count;
+                  }
+                } else {
+                  scores[exIndex] = {};
+                  scores[exIndex][word] = count;
+                }
+              }
+            };
+            if (dict) {
+              updateScores();
+            } else {
+              var r;
+              for (idx in info.index) {
+                r = new RegExp(word);
+                if (r.test(idx)) {
+                  dict = info.index[idx];
+                  updateScores();
+                }
+              }
+            }
+          }
+          examples = [];
+          for (var j in scores) {
+            var ex = info.examples[j];
+            ex.score = scores[j];
+            examples.push(ex);
+          }
+          // sort examples by first by number of words matched, then
+          // by word frequency
+          examples.sort(function(a, b) {
+            var cmp;
+            var aWords = 0, bWords = 0;
+            var aScore = 0, bScore = 0;
+            for (var i in a.score) {
+              aScore += a.score[i];
+              aWords += 1;
+            }
+            for (var j in b.score) {
+              bScore += b.score[j];
+              bWords += 1;
+            }
+            if (aWords == bWords) {
+              cmp = bScore - aScore;
+            } else {
+              cmp = bWords - aWords;
+            }
+            return cmp;
+          });
+        }
+        listExamples(examples);
+      }
+
+      function parseQuery() {
+        var params = {};
+        var list = window.location.search.substring(1).split("&");
+        for (var i = 0; i < list.length; ++i) {
+          var pair = list[i].split("=");
+          if (pair.length == 2) {
+            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+          }
+        }
+        if (params["q"]) {
+          var input = document.getElementById("keywords");
+          input.value = params["q"];
+          inputChange.call(input);
+        }
+      }
+
+      window.onload = function() {
+        for (var i = 0; i < info.examples.length; ++i) {
+          info.examples[i].link += window.location.search;
+        }
+        template = new jugl.Template("template");
+        target = document.getElementById("examples");
+        listExamples(info.examples);
+        document.getElementById("keywords").onkeyup = inputChange;
+        parseQuery();
+      };
+
+    </script>
+
+    <title>OpenLayers示例</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./OpenLayers示例_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./OpenLayers示例_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+          <form class="navbar-form" role="search">
+            <input name="q" type="text" id="keywords" class="search-query" placeholder="Search" autofocus="">
+            <span id="count"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（165）</font></font></span>
+          </form>
+        </div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+      <div id="examples"><div class="row">
+          <div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/accessible.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">无障碍地图</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（accessibility.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">可访问地图的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/animation.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">查看动画</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（animation.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">演示动画的平移，缩放和旋转。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/arcgis-image.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">图像ArcGIS MapServer </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（arcgis-image.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">图像的示例ArcGIS图层。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/arcgis-tiled.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺ArcGIS MapServer </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（arcgis-tiled.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺ArcGIS层的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/attributions.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">归属</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（attributions.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图上的可见变化属性的示例调整大小，以便在小地图上折叠它们。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/bing-maps.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bing地图</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（bing-maps.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Bing Maps图层示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/blend-modes.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">混合模式</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（blend-modes.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">显示如何在后处理和预处理事件处理程序中更改画布合成/混合模式。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/box-selection.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">框选择</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（box-selection.html）</font></font></small>
+              </span>
+              <p class="description">Using a DragBox interaction to select features.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/button-title.html">
+              <span class="mainlink">
+                <strong>Custom Tooltips</strong><br>
+                <small>(button-title.html)</small>
+              </span>
+              <p class="description">This example shows how to customize the buttons tooltips with Bootstrap.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/canvas-gradient-pattern.html">
+              <span class="mainlink">
+                <strong>Styling feature with CanvasGradient or CanvasPattern</strong><br>
+                <small>(canvas-gradient-pattern.html)</small>
+              </span>
+              <p class="description">Example showing the countries vector layer styled with patterns and gradients.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/canvas-tiles.html">
+              <span class="mainlink">
+                <strong>Canvas Tiles</strong><br>
+                <small>(canvas-tiles.html)</small>
+              </span>
+              <p class="description">Renders tiles with coordinates for debugging.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/cartodb.html">
+              <span class="mainlink">
+                <strong>CartoDB source example</strong><br>
+                <small>(cartodb.html)</small>
+              </span>
+              <p class="description">Example of a cartodb map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/center.html">
+              <span class="mainlink">
+                <strong>Advanced View Positioning</strong><br>
+                <small>(center.html)</small>
+              </span>
+              <p class="description">This example demonstrates how a map's view can be adjusted so a geometry or coordinate is positioned at a specific pixel location.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/cluster.html">
+              <span class="mainlink">
+                <strong>Clustered Features</strong><br>
+                <small>(cluster.html)</small>
+              </span>
+              <p class="description">Example of using ol.source.Cluster.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/color-manipulation.html">
+              <span class="mainlink">
+                <strong>Color Manipulation</strong><br>
+                <small>(color-manipulation.html)</small>
+              </span>
+              <p class="description">Demonstrates color manipulation with a raster source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/custom-controls.html">
+              <span class="mainlink">
+                <strong>Custom Controls</strong><br>
+                <small>(custom-controls.html)</small>
+              </span>
+              <p class="description">Shows how to create custom controls.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/custom-icon.html">
+              <span class="mainlink">
+                <strong>Custom Icon</strong><br>
+                <small>(custom-icon.html)</small>
+              </span>
+              <p class="description">Example using a custom attribution icon object</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/custom-interactions.html">
+              <span class="mainlink">
+                <strong>Custom Interactions</strong><br>
+                <small>(custom-interactions.html)</small>
+              </span>
+              <p class="description">Example of a custom interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/d3.html">
+              <span class="mainlink">
+                <strong>d3 Integration</strong><br>
+                <small>(d3.html)</small>
+              </span>
+              <p class="description">Example of using OpenLayers and d3 together.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/device-orientation.html">
+              <span class="mainlink">
+                <strong>Device Orientation</strong><br>
+                <small>(device-orientation.html)</small>
+              </span>
+              <p class="description">Listen to DeviceOrientation events.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/drag-and-drop-image-vector.html">
+              <span class="mainlink">
+                <strong>Drag-and-Drop Image Vector</strong><br>
+                <small>(drag-and-drop-image-vector.html)</small>
+              </span>
+              <p class="description">Example of using the drag-and-drop interaction with a ol.source.ImageVector.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/drag-and-drop.html">
+              <span class="mainlink">
+                <strong>Drag-and-Drop</strong><br>
+                <small>(drag-and-drop.html)</small>
+              </span>
+              <p class="description">Example of using the drag-and-drop interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/drag-rotate-and-zoom.html">
+              <span class="mainlink">
+                <strong>Drag, Rotate, and Zoom</strong><br>
+                <small>(drag-rotate-and-zoom.html)</small>
+              </span>
+              <p class="description">A single interaction to drag, rotate, and zoom.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/draw-and-modify-features.html">
+              <span class="mainlink">
+                <strong>Draw and Modify Features</strong><br>
+                <small>(draw-and-modify-features.html)</small>
+              </span>
+              <p class="description">Example of using the ol.interaction.Draw interaction together with the ol.interaction.Modify interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/draw-features.html">
+              <span class="mainlink">
+                <strong>Draw Features</strong><br>
+                <small>(draw-features.html)</small>
+              </span>
+              <p class="description">Example of using the ol.interaction.Draw interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/draw-freehand.html">
+              <span class="mainlink">
+                <strong>Freehand Drawing</strong><br>
+                <small>(draw-freehand.html)</small>
+              </span>
+              <p class="description">Example using the ol.interaction.Draw interaction in freehand mode.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/draw-shapes.html">
+              <span class="mainlink">
+                <strong>Draw Shapes</strong><br>
+                <small>(draw-shapes.html)</small>
+              </span>
+              <p class="description">Using the ol.interaction.Draw to create regular shapes</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/dynamic-data.html">
+              <span class="mainlink">
+                <strong>Dynamic Data</strong><br>
+                <small>(dynamic-data.html)</small>
+              </span>
+              <p class="description">Example of dynamic data.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/earthquake-clusters.html">
+              <span class="mainlink">
+                <strong>Earthquake Clusters</strong><br>
+                <small>(earthquake-clusters.html)</small>
+              </span>
+              <p class="description">Demonstrates the use of style geometries to render source features of a cluster.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/earthquake-custom-symbol.html">
+              <span class="mainlink">
+                <strong>Earthquakes with custom symbols</strong><br>
+                <small>(earthquake-custom-symbol.html)</small>
+              </span>
+              <p class="description">Demonstrates the use of `ol.render.toCanvas` to create custom icon symbols.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/epsg-4326.html">
+              <span class="mainlink">
+                <strong>EPSG:4326</strong><br>
+                <small>(epsg-4326.html)</small>
+              </span>
+              <p class="description">Example of a map in EPSG:4326.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/export-map.html">
+              <span class="mainlink">
+                <strong>Map Export</strong><br>
+                <small>(export-map.html)</small>
+              </span>
+              <p class="description">Example of exporting a map as a PNG image.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/export-pdf.html">
+              <span class="mainlink">
+                <strong>Export PDF example</strong><br>
+                <small>(export-pdf.html)</small>
+              </span>
+              <p class="description">Example of exporting a map as a PDF.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/extent-interaction.html">
+              <span class="mainlink">
+                <strong>Extent Interaction</strong><br>
+                <small>(extent-interaction.html)</small>
+              </span>
+              <p class="description">Using an Extent interaction to draw an extent.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/feature-animation.html">
+              <span class="mainlink">
+                <strong>Custom Animation</strong><br>
+                <small>(feature-animation.html)</small>
+              </span>
+              <p class="description">Demonstrates how to animate features.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/feature-move-animation.html">
+              <span class="mainlink">
+                <strong>Marker Animation</strong><br>
+                <small>(feature-move-animation.html)</small>
+              </span>
+              <p class="description">Demonstrates how to move a feature along a line.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/flight-animation.html">
+              <span class="mainlink">
+                <strong>Flight Animation</strong><br>
+                <small>(flight-animation.html)</small>
+              </span>
+              <p class="description">Demonstrates how to animate flights with ´postcompose´.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/fractal.html">
+              <span class="mainlink">
+                <strong>Fractal Rendering</strong><br>
+                <small>(fractal.html)</small>
+              </span>
+              <p class="description">Example of a fractal.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/full-screen-drag-rotate-and-zoom.html">
+              <span class="mainlink">
+                <strong>Full Screen Drag, Rotate, and Zoom</strong><br>
+                <small>(full-screen-drag-rotate-and-zoom.html)</small>
+              </span>
+              <p class="description">Example of drag rotate and zoom control with full screen effect.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/full-screen-source.html">
+              <span class="mainlink">
+                <strong>Full Screen Control with extended source element</strong><br>
+                <small>(full-screen-source.html)</small>
+              </span>
+              <p class="description">Example of a full screen control with a source option definition.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/full-screen.html">
+              <span class="mainlink">
+                <strong>Full Screen Control</strong><br>
+                <small>(full-screen.html)</small>
+              </span>
+              <p class="description">Example of a full screen control.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/geojson-vt.html">
+              <span class="mainlink">
+                <strong>geojson-vt integration</strong><br>
+                <small>(geojson-vt.html)</small>
+              </span>
+              <p class="description">Slice GeoJSON into vector tiles on the fly in the browser.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/geojson.html">
+              <span class="mainlink">
+                <strong>GeoJSON</strong><br>
+                <small>(geojson.html)</small>
+              </span>
+              <p class="description">Example of GeoJSON features.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/geolocation-orientation.html">
+              <span class="mainlink">
+                <strong>Geolocation Tracking with Orientation</strong><br>
+                <small>(geolocation-orientation.html)</small>
+              </span>
+              <p class="description">Example of a geolocated and oriented map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/geolocation.html">
+              <span class="mainlink">
+                <strong>Geolocation</strong><br>
+                <small>(geolocation.html)</small>
+              </span>
+              <p class="description">Using geolocation to control a map view.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/getfeatureinfo-image.html">
+              <span class="mainlink">
+                <strong>WMS GetFeatureInfo (Image Layer)</strong><br>
+                <small>(getfeatureinfo-image.html)</small>
+              </span>
+              <p class="description">Using an image WMS source with GetFeatureInfo requests</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/getfeatureinfo-layers.html">
+              <span class="mainlink">
+                <strong>WMS GetFeatureInfo (Layers)</strong><br>
+                <small>(getfeatureinfo-layers.html)</small>
+              </span>
+              <p class="description">Shows how to fetch features per layer name in a single WMS GetFeatureInfo request
+</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/getfeatureinfo-tile.html">
+              <span class="mainlink">
+                <strong>WMS GetFeatureInfo (Tile Layer)</strong><br>
+                <small>(getfeatureinfo-tile.html)</small>
+              </span>
+              <p class="description">Issuing GetFeatureInfo requests with a WMS tiled source</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/gpx.html">
+              <span class="mainlink">
+                <strong>GPX Data</strong><br>
+                <small>(gpx.html)</small>
+              </span>
+              <p class="description">Example of using the GPX source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/graticule.html">
+              <span class="mainlink">
+                <strong>Map Graticule</strong><br>
+                <small>(graticule.html)</small>
+              </span>
+              <p class="description">This example shows how to add a graticule overlay to a map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/heatmap-earthquakes.html">
+              <span class="mainlink">
+                <strong>Earthquakes Heatmap</strong><br>
+                <small>(heatmap-earthquakes.html)</small>
+              </span>
+              <p class="description">Demonstrates the use of a heatmap layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/here-maps.html">
+              <span class="mainlink">
+                <strong>HERE Map Tile API</strong><br>
+                <small>(here-maps.html)</small>
+              </span>
+              <p class="description">Example of a map with map tiles from HERE.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/hit-tolerance.html">
+              <span class="mainlink">
+                <strong>Hit Tolerance</strong><br>
+                <small>(hit-tolerance.html)</small>
+              </span>
+              <p class="description">Example using the hitTolerance parameter.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/icon-color.html">
+              <span class="mainlink">
+                <strong>Icon Colors</strong><br>
+                <small>(icon-color.html)</small>
+              </span>
+              <p class="description">Example assigning a custom color to an icon</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/icon-negative.html">
+              <span class="mainlink">
+                <strong>Icon Pixel Operations</strong><br>
+                <small>(icon-negative.html)</small>
+              </span>
+              <p class="description">Canvas pixel operations on a point icon.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/icon-sprite-webgl.html">
+              <span class="mainlink">
+                <strong>Icon Sprites with WebGL</strong><br>
+                <small>(icon-sprite-webgl.html)</small>
+              </span>
+              <p class="description">Icon sprite with WebGL</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/icon.html">
+              <span class="mainlink">
+                <strong>Icon Symbolizer</strong><br>
+                <small>(icon.html)</small>
+              </span>
+              <p class="description">Example using an icon to symbolize a point.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/igc.html">
+              <span class="mainlink">
+                <strong>IGC Data</strong><br>
+                <small>(igc.html)</small>
+              </span>
+              <p class="description">Example of tracks recorded from multiple paraglider flights on the same day, read from an IGC file.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/image-filter.html">
+              <span class="mainlink">
+                <strong>Image Filters</strong><br>
+                <small>(image-filter.html)</small>
+              </span>
+              <p class="description">Apply a filter to imagery</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/image-load-events.html">
+              <span class="mainlink">
+                <strong>Image Load Events</strong><br>
+                <small>(image-load-events.html)</small>
+              </span>
+              <p class="description">Example using image load events.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/image-vector-layer.html">
+              <span class="mainlink">
+                <strong>Image Vector Layer</strong><br>
+                <small>(image-vector-layer.html)</small>
+              </span>
+              <p class="description">Example of an image vector layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/jsts.html">
+              <span class="mainlink">
+                <strong>JSTS Integration</strong><br>
+                <small>(jsts.html)</small>
+              </span>
+              <p class="description">Example on how to use JSTS with OpenLayers.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/kml-earthquakes.html">
+              <span class="mainlink">
+                <strong>Earthquakes in KML</strong><br>
+                <small>(kml-earthquakes.html)</small>
+              </span>
+              <p class="description">Demonstrates the use of a Shape symbolizer to render earthquake locations.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/kml-timezones.html">
+              <span class="mainlink">
+                <strong>Timezones in KML</strong><br>
+                <small>(kml-timezones.html)</small>
+              </span>
+              <p class="description">Demonstrates rendering timezones from KML.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/kml.html">
+              <span class="mainlink">
+                <strong>KML</strong><br>
+                <small>(kml.html)</small>
+              </span>
+              <p class="description">Rendering KML with a vector source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-clipping-webgl.html">
+              <span class="mainlink">
+                <strong>Layer Clipping with WebGL</strong><br>
+                <small>(layer-clipping-webgl.html)</small>
+              </span>
+              <p class="description">Layer WebGL clipping example.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-clipping.html">
+              <span class="mainlink">
+                <strong>Layer Clipping</strong><br>
+                <small>(layer-clipping.html)</small>
+              </span>
+              <p class="description">Layer clipping example</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-extent.html">
+              <span class="mainlink">
+                <strong>Limited Layer Extent</strong><br>
+                <small>(layer-extent.html)</small>
+              </span>
+              <p class="description">Restricting layer rendering to a limited extent.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-group.html">
+              <span class="mainlink">
+                <strong>Layer Groups</strong><br>
+                <small>(layer-group.html)</small>
+              </span>
+              <p class="description">Example of a map with layer group.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-spy.html">
+              <span class="mainlink">
+                <strong>Layer Spy</strong><br>
+                <small>(layer-spy.html)</small>
+              </span>
+              <p class="description">View a portion of one layer over another</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-swipe.html">
+              <span class="mainlink">
+                <strong>Layer Swipe</strong><br>
+                <small>(layer-swipe.html)</small>
+              </span>
+              <p class="description">Example of a Layer swipe map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/layer-z-index.html">
+              <span class="mainlink">
+                <strong>Layer Z-Index</strong><br>
+                <small>(layer-z-index.html)</small>
+              </span>
+              <p class="description">Example of ordering layers using Z-index.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/lazy-source.html">
+              <span class="mainlink">
+                <strong>Lazy Source</strong><br>
+                <small>(lazy-source.html)</small>
+              </span>
+              <p class="description">Example of setting a layer source after construction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/line-arrows.html">
+              <span class="mainlink">
+                <strong>LineString Arrows</strong><br>
+                <small>(line-arrows.html)</small>
+              </span>
+              <p class="description">Example of drawing arrows for each line string segment.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/localized-openstreetmap.html">
+              <span class="mainlink">
+                <strong>Localized OpenStreetMap</strong><br>
+                <small>(localized-openstreetmap.html)</small>
+              </span>
+              <p class="description">Example of a localized OpenStreetMap map with a custom tile server and a custom attribution.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/magnify.html">
+              <span class="mainlink">
+                <strong>Magnify</strong><br>
+                <small>(magnify.html)</small>
+              </span>
+              <p class="description">Show a magnified version of imager under the pointer</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mapbox-vector-tiles-advanced.html">
+              <span class="mainlink">
+                <strong>Advanced Mapbox Vector Tiles</strong><br>
+                <small>(mapbox-vector-tiles-advanced.html)</small>
+              </span>
+              <p class="description">Example of a Mapbox vector tiles map with custom tile grid.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mapbox-vector-tiles.html">
+              <span class="mainlink">
+                <strong>Mapbox Vector Tiles</strong><br>
+                <small>(mapbox-vector-tiles.html)</small>
+              </span>
+              <p class="description">Example of a Mapbox vector tiles map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mapguide-untiled.html">
+              <span class="mainlink">
+                <strong>MapGuide Untiled</strong><br>
+                <small>(mapguide-untiled.html)</small>
+              </span>
+              <p class="description">Example of a untiled MapGuide map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/measure.html">
+              <span class="mainlink">
+                <strong>Measure</strong><br>
+                <small>(measure.html)</small>
+              </span>
+              <p class="description">Using a draw interaction to measure lengths and areas.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/min-max-resolution.html">
+              <span class="mainlink">
+                <strong>Layer Min/Max Resolution</strong><br>
+                <small>(min-max-resolution.html)</small>
+              </span>
+              <p class="description">Show/hide layers depending on current view resolution.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/min-zoom.html">
+              <span class="mainlink">
+                <strong>View Min-Zoom</strong><br>
+                <small>(min-zoom.html)</small>
+              </span>
+              <p class="description">Demonstrates how the view's minimum zoom level can be changed.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mobile-full-screen.html">
+              <span class="mainlink">
+                <strong>Full-Screen Mobile</strong><br>
+                <small>(mobile-full-screen.html)</small>
+              </span>
+              <p class="description">Example of a full screen map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/modify-features.html">
+              <span class="mainlink">
+                <strong>Modify Features</strong><br>
+                <small>(modify-features.html)</small>
+              </span>
+              <p class="description">Editing features with the modify interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/modify-test.html">
+              <span class="mainlink">
+                <strong>Modify Features Test</strong><br>
+                <small>(modify-test.html)</small>
+              </span>
+              <p class="description">Example for testing feature modification.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mouse-position.html">
+              <span class="mainlink">
+                <strong>Mouse Position</strong><br>
+                <small>(mouse-position.html)</small>
+              </span>
+              <p class="description">Example of a mouse position control, outside the map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/mousewheel-zoom.html">
+              <span class="mainlink">
+                <strong>Mousewheel/Trackpad Zoom</strong><br>
+                <small>(mousewheel-zoom.html)</small>
+              </span>
+              <p class="description">Restrict wheel/trackpad zooming to integer zoom levels.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/moveend.html">
+              <span class="mainlink">
+                <strong>Moveend Event</strong><br>
+                <small>(moveend.html)</small>
+              </span>
+              <p class="description">Use of the moveend event.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/navigation-controls.html">
+              <span class="mainlink">
+                <strong>Navigation Controls</strong><br>
+                <small>(navigation-controls.html)</small>
+              </span>
+              <p class="description">Shows how to add navigation controls.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/osm-vector-tiles.html">
+              <span class="mainlink">
+                <strong>OSM Vector Tiles</strong><br>
+                <small>(osm-vector-tiles.html)</small>
+              </span>
+              <p class="description">Using OpenStreetMap vector tiles.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/overlay.html">
+              <span class="mainlink">
+                <strong>Overlay</strong><br>
+                <small>(overlay.html)</small>
+              </span>
+              <p class="description">Demonstrates overlays.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/overviewmap-custom.html">
+              <span class="mainlink">
+                <strong>Custom Overview Map</strong><br>
+                <small>(overviewmap-custom.html)</small>
+              </span>
+              <p class="description">Example of OverviewMap control with advanced customization.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/overviewmap.html">
+              <span class="mainlink">
+                <strong>Overview Map Control</strong><br>
+                <small>(overviewmap.html)</small>
+              </span>
+              <p class="description">Example of OverviewMap control.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/permalink.html">
+              <span class="mainlink">
+                <strong>Permalink</strong><br>
+                <small>(permalink.html)</small>
+              </span>
+              <p class="description">Example on how to create permalinks.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/pinch-zoom.html">
+              <span class="mainlink">
+                <strong>Pinch Zoom</strong><br>
+                <small>(pinch-zoom.html)</small>
+              </span>
+              <p class="description">Restrict pinch zooming to integer zoom levels.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/polygon-styles.html">
+              <span class="mainlink">
+                <strong>Custom Polygon Styles</strong><br>
+                <small>(polygon-styles.html)</small>
+              </span>
+              <p class="description">Showing the vertices of a polygon with a custom style geometry.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/popup.html">
+              <span class="mainlink">
+                <strong>Popup</strong><br>
+                <small>(popup.html)</small>
+              </span>
+              <p class="description">Uses an overlay to create a popup.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/preload.html">
+              <span class="mainlink">
+                <strong>Preload Tiles</strong><br>
+                <small>(preload.html)</small>
+              </span>
+              <p class="description">Example of tile preloading.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/raster.html">
+              <span class="mainlink">
+                <strong>Raster Source</strong><br>
+                <small>(raster.html)</small>
+              </span>
+              <p class="description">Demonstrates pixelwise operations with a raster source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/region-growing.html">
+              <span class="mainlink">
+                <strong>Region Growing</strong><br>
+                <small>(region-growing.html)</small>
+              </span>
+              <p class="description">Grow a region from a seed pixel</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/regularshape.html">
+              <span class="mainlink">
+                <strong>Regular Shapes</strong><br>
+                <small>(regularshape.html)</small>
+              </span>
+              <p class="description">Example of some Regular Shape styles.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/render-geometry.html">
+              <span class="mainlink">
+                <strong>Render geometries to a canvas</strong><br>
+                <small>(render-geometry.html)</small>
+              </span>
+              <p class="description">Example of rendering geometries to an arbitrary canvas.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/reprojection-by-code.html">
+              <span class="mainlink">
+                <strong>Reprojection with EPSG.io Search</strong><br>
+                <small>(reprojection-by-code.html)</small>
+              </span>
+              <p class="description">Demonstrates client-side raster reprojection of OSM to arbitrary projection</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/reprojection-image.html">
+              <span class="mainlink">
+                <strong>Image Reprojection</strong><br>
+                <small>(reprojection-image.html)</small>
+              </span>
+              <p class="description">Demonstrates client-side reprojection of single image source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/reprojection-wgs84.html">
+              <span class="mainlink">
+                <strong>OpenStreetMap Reprojection</strong><br>
+                <small>(reprojection-wgs84.html)</small>
+              </span>
+              <p class="description">Demonstrates client-side reprojection of OpenStreetMap in WGS84.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/reprojection.html">
+              <span class="mainlink">
+                <strong>Raster Reprojection</strong><br>
+                <small>(reprojection.html)</small>
+              </span>
+              <p class="description">Demonstrates client-side raster reprojection between various projections.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/reusable-source.html">
+              <span class="mainlink">
+                <strong>Reusable Source</strong><br>
+                <small>(reusable-source.html)</small>
+              </span>
+              <p class="description">Updating a tile source by changing the URL.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/rotation.html">
+              <span class="mainlink">
+                <strong>View Rotation</strong><br>
+                <small>(rotation.html)</small>
+              </span>
+              <p class="description">Example of a rotated map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/scale-line.html">
+              <span class="mainlink">
+                <strong>Scale Line</strong><br>
+                <small>(scale-line.html)</small>
+              </span>
+              <p class="description">Example of a scale line.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/scaleline-indiana-east.html">
+              <span class="mainlink">
+                <strong>OpenStreetMap Reprojection with ScaleLine Control</strong><br>
+                <small>(scaleline-indiana-east.html)</small>
+              </span>
+              <p class="description">Demonstrates client-side reprojection of OpenStreetMap to NAD83 Indiana East.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/sea-level.html">
+              <span class="mainlink">
+                <strong>Sea Level</strong><br>
+                <small>(sea-level.html)</small>
+              </span>
+              <p class="description">Render sea level at different elevations</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/select-features.html">
+              <span class="mainlink">
+                <strong>Select Features</strong><br>
+                <small>(select-features.html)</small>
+              </span>
+              <p class="description">Example of using the Select interaction.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/semi-transparent-layer.html">
+              <span class="mainlink">
+                <strong>Semi-Transparent Layer</strong><br>
+                <small>(semi-transparent-layer.html)</small>
+              </span>
+              <p class="description">Example of a map with a semi-transparent layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/shaded-relief.html">
+              <span class="mainlink">
+                <strong>Shaded Relief</strong><br>
+                <small>(shaded-relief.html)</small>
+              </span>
+              <p class="description">Calculate shaded relief from elevation data</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/side-by-side.html">
+              <span class="mainlink">
+                <strong>Shared Views</strong><br>
+                <small>(side-by-side.html)</small>
+              </span>
+              <p class="description">Two maps with different renderers share view properties</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/simple.html">
+              <span class="mainlink">
+                <strong>Simple Map</strong><br>
+                <small>(simple.html)</small>
+              </span>
+              <p class="description">Example of a simple map.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/snap.html">
+              <span class="mainlink">
+                <strong>Snap Interaction</strong><br>
+                <small>(snap.html)</small>
+              </span>
+              <p class="description">Example of using the snap interaction together with draw and modify interactions.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/sphere-mollweide.html">
+              <span class="mainlink">
+                <strong>Sphere Mollweide</strong><br>
+                <small>(sphere-mollweide.html)</small>
+              </span>
+              <p class="description">Example of a Sphere Mollweide map with a Graticule component.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/stamen.html">
+              <span class="mainlink">
+                <strong>Stamen Tiles</strong><br>
+                <small>(stamen.html)</small>
+              </span>
+              <p class="description">Example of a Stamen tile source.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/static-image.html">
+              <span class="mainlink">
+                <strong>Static Image</strong><br>
+                <small>(static-image.html)</small>
+              </span>
+              <p class="description">Example of a static image layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/street-labels.html">
+              <span class="mainlink">
+                <strong>Street Labels</strong><br>
+                <small>(street-labels.html)</small>
+              </span>
+              <p class="description">Render street names with a custom render.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/symbol-atlas-webgl.html">
+              <span class="mainlink">
+                <strong>Symbols with WebGL</strong><br>
+                <small>(symbol-atlas-webgl.html)</small>
+              </span>
+              <p class="description">Using symbols in an atlas with WebGL.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/synthetic-lines.html">
+              <span class="mainlink">
+                <strong>Synthetic Lines</strong><br>
+                <small>(synthetic-lines.html)</small>
+              </span>
+              <p class="description">Synthetic lines example.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/synthetic-points.html">
+              <span class="mainlink">
+                <strong>Synthetic Points</strong><br>
+                <small>(synthetic-points.html)</small>
+              </span>
+              <p class="description">Synthetic points example.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/teleport.html">
+              <span class="mainlink">
+                <strong>Teleporting Maps</strong><br>
+                <small>(teleport.html)</small>
+              </span>
+              <p class="description">Example of moving a map from one target to another.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/tile-load-events.html">
+              <span class="mainlink">
+                <strong>Tile Load Events</strong><br>
+                <small>(tile-load-events.html)</small>
+              </span>
+              <p class="description">Example using tile load events.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/tile-transitions.html">
+              <span class="mainlink">
+                <strong>Tile Transitions</strong><br>
+                <small>(tile-transitions.html)</small>
+              </span>
+              <p class="description">Custom configuration for opacity transitions on tiles.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/tilejson.html">
+              <span class="mainlink">
+                <strong>TileJSON</strong><br>
+                <small>(tilejson.html)</small>
+              </span>
+              <p class="description">Example of a TileJSON layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/tileutfgrid.html">
+              <span class="mainlink">
+                <strong>Tiled UTFGrid</strong><br>
+                <small>(tileutfgrid.html)</small>
+              </span>
+              <p class="description">This example shows how to read data from a TileUTFGrid layer.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/tissot.html">
+              <span class="mainlink">
+                <strong>Tissot Indicatrix</strong><br>
+                <small>(tissot.html)</small>
+              </span>
+              <p class="description">Draw Tissot's indicatrices on maps.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/topojson.html">
+              <span class="mainlink">
+                <strong>TopoJSON</strong><br>
+                <small>(topojson.html)</small>
+              </span>
+              <p class="description">Demonstrates rendering of features from a TopoJSON topology.</p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/topolis.html">
+              <span class="mainlink">
+                <strong>topolis integration</strong><br>
+                <small>(topolis.html)</small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">关于如何使用OpenLayers的例子。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/translate-features.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">翻译功能</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（translate-features.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">翻译功能交互的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/turf.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">turf.js </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（turf.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">关于如何在OpenLayers中使用turf.js的例子。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-esri-edit.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">可编辑的ArcGIS REST功能服务</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-esri-edit.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在编辑应用程序中使用ArcGIS REST Feature Service的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-esri.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ArcGIS REST功能服务</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-esri.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用带有Tile策略的ArcGIS REST Feature Service的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-label-decluttering.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Vector Label Decluttering </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-label-decluttering.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用自定义渲染器标签退出。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-labels.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">矢量标签</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-labels.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">具有标签的GeoJSON功能示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-layer.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">矢量图层</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-layer.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">具有国家信息的国家/地区矢量图示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-osm.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">OSM XML </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-osm.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用OSM XML源的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-wfs-getfeature.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WFS  -  GetFeature </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-wfs-getfeature.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用过滤器进行WFS GetFeature请求的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/vector-wfs.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WFS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（vector-wfs.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用WFS与BBOX策略的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wkt.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WKT </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wkt.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用WKT解析器的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-capabilities.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMS功能解析</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-capabilities.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解析WMS GetCapabilities响应的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-custom-proj.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">自定义平铺WMS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-custom-proj.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用自定义坐标变换函数的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-custom-tilegrid-512x256.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMS 512x256瓷砖</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-custom-tilegrid-512x256.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">具有512x256像素的WMS图层示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-image-custom-proj.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Proj4js的单图像WMS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-image-custom-proj.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">将Proj4js整合为坐标变换的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-image.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">单图WMS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-image.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">单个图像WMS层的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-no-proj.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMS无投影</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-no-proj.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用投影EPSG的两个WMS层的示例：21781，这是客户端未知的。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-tiled-wrap-180.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺WMS包装</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-tiled-wrap-180.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">覆盖180°子午线的平铺WMS层的例子。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-tiled.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺WMS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-tiled.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺WMS层的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wms-time.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMS时间</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wms-time.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">更改平铺WMS层的时间维度时平滑平铺过渡的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts-capabilities.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMTS功能分析</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts-capabilities.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解析WMTS GetCapabilities响应的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts-dimensions.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMTS平铺过渡</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts-dimensions.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">更改WMTS层的尺寸时平滑平铺过渡的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts-hidpi.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">高DPI WMTS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts-hidpi.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">基于WMTS的HiDPI层的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts-ign.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">IGN WMTS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts-ign.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">演示IGN（法国）WMTS层。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts-layer-from-capabilities.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">来自Capabilities的WMTS层</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts-layer-from-capabilities.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">从WMTS功能文档创建的WMTS源的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/wmts.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMTS </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（wmts.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMTS源的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/xyz-esri-4326-512.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ArcGIS REST with 512x512 Tiles </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（xyz-esri-4326-512.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">EPSG中XYZ源的示例：4326使用Esri 512x512瓦片。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/xyz-esri.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">XYZ Esri </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（xyz-esri.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用Esri瓷砖的XYZ源示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/xyz-retina.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">XYZ视网膜</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（xyz-retina.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Retina / HiDPI Mercator瓷砖（512x512像素）的示例可用作XYZ。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/xyz.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">XYZ </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（xyz.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">XYZ源的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/zoom-constrained.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">约束缩放</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（zoom-constrained.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">缩放约束视图的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/zoomify.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Zoomify </font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（zoomify.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">缩放源的示例。</font></font></p>
+            </a>
+          </div><div class="col-md-4 col-sm-4">
+            <a class="example" href="http://openlayers.org/en/latest/examples/zoomslider.html">
+              <span class="mainlink">
+                <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">缩放滑块</font></font></strong><br>
+                <small><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">（zoomslider.html）</font></font></small>
+              </span>
+              <p class="description"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">各种ZoomSlider控件的示例。</font></font></p>
+            </a>
+          </div>
+        </div></div>
+      <div style="display: none;">
+        <div id="template" class="row">
+          <div class="col-md-4 col-sm-4" jugl:repeat="example examples">
+            <a jugl:attributes="href example.link" class="example">
+              <span class="mainlink">
+                <strong><span jugl:replace="example.title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">标题</font></font></span></strong><br>
+                <small jugl:content="&#39;(&#39; + example.example + &#39;)&#39;"></small>
+              </span>
+              <p class="description" jugl:content="example.shortdesc"></p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./OpenLayers示例_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+  
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

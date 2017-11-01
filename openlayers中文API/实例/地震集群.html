@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)http://openlayers.org/en/latest/examples/earthquake-clusters.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./地震集群_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./地震集群_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./地震集群_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./地震集群_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./地震集群_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./地震集群_files/earthquake-clusters.css">
+    <script src="./地震集群_files/polyfill.min.js.下载"></script>
+    <script src="./地震集群_files/ZeroClipboard.min.js.下载"></script>
+    <title>地震集群</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./地震集群_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./地震集群_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button>
+        This example uses OpenLayers v<span>4.4.2</span>. The <a id="latest-link" href="http://openlayers.org/en/latest/examples/earthquake-clusters.html#" class="alert-link">latest</a> is v<span id="latest-version">4.4.2</span>.
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地震集群</font></font></h4>
+          <div id="map" class="map"><div class="ol-viewport" data-view="20" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li><li>Map tiles by <a href="https://stamen.com/">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</li><li>© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.</li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc">Demonstrates the use of style geometries to render source features of a cluster.</p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">该示例解析一个KML文件，并将这些特征作为集群呈现在矢量图层上。</font><font style="vertical-align: inherit;">在这个例子中的造型很有参与。</font><font style="vertical-align: inherit;">单个地震位置（呈现为星形）的大小相对于其大小。</font><font style="vertical-align: inherit;">集群具有相对于集群中的功能数量的不透明度，以及表示构成集群的功能范围的大小。</font><font style="vertical-align: inherit;">当单击或悬停在群集上时，将显示组成群集的各个功能。</font></font></p> <p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为了实现这一点，我们大量使用风格功能</font></font><code>ol.style.Style#geometry</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.extent.html" title="ol.extent的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.extent</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.format.KML.html" title="ol.format.KML的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.format.KML</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.html" title="用于ol.interaction的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.Select.html" title="ol.interaction.Select的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction.Select</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html" title="ol.layer.Tile的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Tile</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Vector.html" title="ol.layer.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.Cluster.html" title="ol.source.Cluster的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.Cluster</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.Stamen.html" title="ol.source.Stamen的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.Stamen</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.Vector.html" title="ol.source.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Circle.html" title="ol.style.Circle的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Circle</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Fill.html" title="ol.style.Fill的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Fill</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.RegularShape.html" title="ol.style.RegularShape的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.RegularShape</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Stroke.html" title="ol.style.Stroke的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Stroke</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Style.html" title="ol.style.Style的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Style</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Text.html" title="ol.style.Text的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Text</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Earthquake Clusters</textarea>
+          <textarea class="hidden" name="description">Demonstrates the use of style geometries to render source features of a cluster.</textarea>
+          <textarea class="hidden" name="js">var earthquakeFill = new ol.style.Fill({
+  color: 'rgba(255, 153, 0, 0.8)'
+});
+var earthquakeStroke = new ol.style.Stroke({
+  color: 'rgba(255, 204, 0, 0.2)',
+  width: 1
+});
+var textFill = new ol.style.Fill({
+  color: '#fff'
+});
+var textStroke = new ol.style.Stroke({
+  color: 'rgba(0, 0, 0, 0.6)',
+  width: 3
+});
+var invisibleFill = new ol.style.Fill({
+  color: 'rgba(255, 255, 255, 0.01)'
+});
+
+function createEarthquakeStyle(feature) {
+  // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
+  // standards-violating &lt;magnitude&gt; tag in each Placemark.  We extract it
+  // from the Placemark's name instead.
+  var name = feature.get('name');
+  var magnitude = parseFloat(name.substr(2));
+  var radius = 5 + 20 * (magnitude - 5);
+
+  return new ol.style.Style({
+    geometry: feature.getGeometry(),
+    image: new ol.style.RegularShape({
+      radius1: radius,
+      radius2: 3,
+      points: 5,
+      angle: Math.PI,
+      fill: earthquakeFill,
+      stroke: earthquakeStroke
+    })
+  });
+}
+
+var maxFeatureCount, vector;
+function calculateClusterInfo(resolution) {
+  maxFeatureCount = 0;
+  var features = vector.getSource().getFeatures();
+  var feature, radius;
+  for (var i = features.length - 1; i &gt;= 0; --i) {
+    feature = features[i];
+    var originalFeatures = feature.get('features');
+    var extent = ol.extent.createEmpty();
+    var j, jj;
+    for (j = 0, jj = originalFeatures.length; j &lt; jj; ++j) {
+      ol.extent.extend(extent, originalFeatures[j].getGeometry().getExtent());
+    }
+    maxFeatureCount = Math.max(maxFeatureCount, jj);
+    radius = 0.25 * (ol.extent.getWidth(extent) + ol.extent.getHeight(extent)) /
+        resolution;
+    feature.set('radius', radius);
+  }
+}
+
+var currentResolution;
+function styleFunction(feature, resolution) {
+  if (resolution != currentResolution) {
+    calculateClusterInfo(resolution);
+    currentResolution = resolution;
+  }
+  var style;
+  var size = feature.get('features').length;
+  if (size &gt; 1) {
+    style = new ol.style.Style({
+      image: new ol.style.Circle({
+        radius: feature.get('radius'),
+        fill: new ol.style.Fill({
+          color: [255, 153, 0, Math.min(0.8, 0.4 + (size / maxFeatureCount))]
+        })
+      }),
+      text: new ol.style.Text({
+        text: size.toString(),
+        fill: textFill,
+        stroke: textStroke
+      })
+    });
+  } else {
+    var originalFeature = feature.get('features')[0];
+    style = createEarthquakeStyle(originalFeature);
+  }
+  return style;
+}
+
+function selectStyleFunction(feature) {
+  var styles = [new ol.style.Style({
+    image: new ol.style.Circle({
+      radius: feature.get('radius'),
+      fill: invisibleFill
+    })
+  })];
+  var originalFeatures = feature.get('features');
+  var originalFeature;
+  for (var i = originalFeatures.length - 1; i &gt;= 0; --i) {
+    originalFeature = originalFeatures[i];
+    styles.push(createEarthquakeStyle(originalFeature));
+  }
+  return styles;
+}
+
+vector = new ol.layer.Vector({
+  source: new ol.source.Cluster({
+    distance: 40,
+    source: new ol.source.Vector({
+      url: 'https://openlayers.org/en/v4.4.2/examples/data/kml/2012_Earthquakes_Mag5.kml',
+      format: new ol.format.KML({
+        extractStyles: false
+      })
+    })
+  }),
+  style: styleFunction
+});
+
+var raster = new ol.layer.Tile({
+  source: new ol.source.Stamen({
+    layer: 'toner'
+  })
+});
+
+var map = new ol.Map({
+  layers: [raster, vector],
+  interactions: ol.interaction.defaults().extend([new ol.interaction.Select({
+    condition: function(evt) {
+      return  evt.type == 'pointermove' ||
+          evt.type == 'singleclick';
+    },
+    style: selectStyleFunction
+  })]),
+  target: 'map',
+  view: new ol.View({
+    center: [0, 0],
+    zoom: 2
+  })
+});
+</textarea>
+          <textarea class="hidden" name="css">#map {
+  position: relative;
+}
+#info {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  z-index: 100;
+}
+.tooltip.in {
+  opacity: 1;
+}
+.tooltip.top .tooltip-arrow {
+  border-top-color: white;
+}
+.tooltip-inner {
+  border: 2px solid white;
+}
+</textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Earthquake Clusters<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">#map </span><span class="token punctuation">{</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">#info </span><span class="token punctuation">{</span>
+        <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> 1px<span class="token punctuation">;</span>
+        <span class="token property">width</span><span class="token punctuation">:</span> 1px<span class="token punctuation">;</span>
+        <span class="token property">z-index</span><span class="token punctuation">:</span> 100<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.tooltip.in </span><span class="token punctuation">{</span>
+        <span class="token property">opacity</span><span class="token punctuation">:</span> 1<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.tooltip.top .tooltip-arrow </span><span class="token punctuation">{</span>
+        <span class="token property">border-top-color</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token selector">.tooltip-inner </span><span class="token punctuation">{</span>
+        <span class="token property">border</span><span class="token punctuation">:</span> 2px solid white<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> earthquakeFill <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        color<span class="token punctuation">:</span> <span class="token string">'rgba(255, 153, 0, 0.8)'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> earthquakeStroke <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Stroke</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        color<span class="token punctuation">:</span> <span class="token string">'rgba(255, 204, 0, 0.2)'</span><span class="token punctuation">,</span>
+        width<span class="token punctuation">:</span> <span class="token number">1</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> textFill <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        color<span class="token punctuation">:</span> <span class="token string">'#fff'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> textStroke <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Stroke</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        color<span class="token punctuation">:</span> <span class="token string">'rgba(0, 0, 0, 0.6)'</span><span class="token punctuation">,</span>
+        width<span class="token punctuation">:</span> <span class="token number">3</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> invisibleFill <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        color<span class="token punctuation">:</span> <span class="token string">'rgba(255, 255, 255, 0.01)'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">function</span> <span class="token function">createEarthquakeStyle</span><span class="token punctuation">(</span>feature<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a</span>
+        <span class="token comment" spellcheck="true">// standards-violating &lt;magnitude&gt; tag in each Placemark.  We extract it</span>
+        <span class="token comment" spellcheck="true">// from the Placemark's name instead.</span>
+        <span class="token keyword">var</span> name <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> magnitude <span class="token operator">=</span> <span class="token function">parseFloat</span><span class="token punctuation">(</span>name<span class="token punctuation">.</span><span class="token function">substr</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> radius <span class="token operator">=</span> <span class="token number">5</span> <span class="token operator">+</span> <span class="token number">20</span> <span class="token operator">*</span> <span class="token punctuation">(</span>magnitude <span class="token operator">-</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          geometry<span class="token punctuation">:</span> feature<span class="token punctuation">.</span><span class="token function">getGeometry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>RegularShape</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            radius1<span class="token punctuation">:</span> radius<span class="token punctuation">,</span>
+            radius2<span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+            points<span class="token punctuation">:</span> <span class="token number">5</span><span class="token punctuation">,</span>
+            angle<span class="token punctuation">:</span> Math<span class="token punctuation">.</span>PI<span class="token punctuation">,</span>
+            fill<span class="token punctuation">:</span> earthquakeFill<span class="token punctuation">,</span>
+            stroke<span class="token punctuation">:</span> earthquakeStroke
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">var</span> maxFeatureCount<span class="token punctuation">,</span> vector<span class="token punctuation">;</span>
+      <span class="token keyword">function</span> <span class="token function">calculateClusterInfo</span><span class="token punctuation">(</span>resolution<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        maxFeatureCount <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> features <span class="token operator">=</span> vector<span class="token punctuation">.</span><span class="token function">getSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getFeatures</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> feature<span class="token punctuation">,</span> radius<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> features<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token operator">--</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          feature <span class="token operator">=</span> features<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> originalFeatures <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'features'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> extent <span class="token operator">=</span> ol<span class="token punctuation">.</span>extent<span class="token punctuation">.</span><span class="token function">createEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> j<span class="token punctuation">,</span> jj<span class="token punctuation">;</span>
+          <span class="token keyword">for</span> <span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> jj <span class="token operator">=</span> originalFeatures<span class="token punctuation">.</span>length<span class="token punctuation">;</span> j <span class="token operator">&lt;</span> jj<span class="token punctuation">;</span> <span class="token operator">++</span>j<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            ol<span class="token punctuation">.</span>extent<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>extent<span class="token punctuation">,</span> originalFeatures<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getGeometry</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getExtent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          maxFeatureCount <span class="token operator">=</span> Math<span class="token punctuation">.</span><span class="token function">max</span><span class="token punctuation">(</span>maxFeatureCount<span class="token punctuation">,</span> jj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          radius <span class="token operator">=</span> <span class="token number">0.25</span> <span class="token operator">*</span> <span class="token punctuation">(</span>ol<span class="token punctuation">.</span>extent<span class="token punctuation">.</span><span class="token function">getWidth</span><span class="token punctuation">(</span>extent<span class="token punctuation">)</span> <span class="token operator">+</span> ol<span class="token punctuation">.</span>extent<span class="token punctuation">.</span><span class="token function">getHeight</span><span class="token punctuation">(</span>extent<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">/</span>
+              resolution<span class="token punctuation">;</span>
+          feature<span class="token punctuation">.</span><span class="token keyword">set</span><span class="token punctuation">(</span><span class="token string">'radius'</span><span class="token punctuation">,</span> radius<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">var</span> currentResolution<span class="token punctuation">;</span>
+      <span class="token keyword">function</span> <span class="token function">styleFunction</span><span class="token punctuation">(</span>feature<span class="token punctuation">,</span> resolution<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>resolution <span class="token operator">!</span><span class="token operator">=</span> currentResolution<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">calculateClusterInfo</span><span class="token punctuation">(</span>resolution<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          currentResolution <span class="token operator">=</span> resolution<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">var</span> style<span class="token punctuation">;</span>
+        <span class="token keyword">var</span> size <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'features'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>size <span class="token operator">&gt;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          style <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Circle</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              radius<span class="token punctuation">:</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'radius'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              fill<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+                color<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">255</span><span class="token punctuation">,</span> <span class="token number">153</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> Math<span class="token punctuation">.</span><span class="token function">min</span><span class="token punctuation">(</span><span class="token number">0.8</span><span class="token punctuation">,</span> <span class="token number">0.4</span> <span class="token operator">+</span> <span class="token punctuation">(</span>size <span class="token operator">/</span> maxFeatureCount<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+              <span class="token punctuation">}</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            text<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Text</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              text<span class="token punctuation">:</span> size<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              fill<span class="token punctuation">:</span> textFill<span class="token punctuation">,</span>
+              stroke<span class="token punctuation">:</span> textStroke
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> originalFeature <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'features'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+          style <span class="token operator">=</span> <span class="token function">createEarthquakeStyle</span><span class="token punctuation">(</span>originalFeature<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> style<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">function</span> <span class="token function">selectStyleFunction</span><span class="token punctuation">(</span>feature<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> styles <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Circle</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            radius<span class="token punctuation">:</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'radius'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            fill<span class="token punctuation">:</span> invisibleFill
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> originalFeatures <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'features'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> originalFeature<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> originalFeatures<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token operator">--</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          originalFeature <span class="token operator">=</span> originalFeatures<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+          styles<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token function">createEarthquakeStyle</span><span class="token punctuation">(</span>originalFeature<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> styles<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Cluster</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          distance<span class="token punctuation">:</span> <span class="token number">40</span><span class="token punctuation">,</span>
+          source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            url<span class="token punctuation">:</span> <span class="token string">'https://openlayers.org/en/v4.4.2/examples/data/kml/2012_Earthquakes_Mag5.kml'</span><span class="token punctuation">,</span>
+            format<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>format<span class="token punctuation">.</span>KML</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              extractStyles<span class="token punctuation">:</span> <span class="token keyword">false</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        style<span class="token punctuation">:</span> styleFunction
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> raster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Stamen</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          layer<span class="token punctuation">:</span> <span class="token string">'toner'</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        layers<span class="token punctuation">:</span> <span class="token punctuation">[</span>raster<span class="token punctuation">,</span> vector<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        interactions<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span><span class="token function">defaults</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span>Select</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          condition<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span>  evt<span class="token punctuation">.</span>type <span class="token operator">==</span> <span class="token string">'pointermove'</span> <span class="token operator">||</span>
+                evt<span class="token punctuation">.</span>type <span class="token operator">==</span> <span class="token string">'singleclick'</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          style<span class="token punctuation">:</span> selectStyleFunction
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> <span class="token string">'map'</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          center<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          zoom<span class="token punctuation">:</span> <span class="token number">2</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./地震集群_files/common.js.下载"></script>
+    <script src="./地震集群_files/prism.min.js.下载"></script>
+    <script src="./地震集群_files/loader.js.下载"></script><script type="text/javascript" src="./地震集群_files/ol.js.下载"></script><script type="text/javascript" src="./地震集群_files/earthquake-clusters.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./地震集群_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

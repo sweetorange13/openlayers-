@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)http://openlayers.org/en/latest/examples/wms-capabilities.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./WMS能力解析_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./WMS能力解析_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./WMS能力解析_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./WMS能力解析_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./WMS能力解析_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./WMS能力解析_files/wms-capabilities.css">
+    <script src="./WMS能力解析_files/polyfill.min.js.下载"></script>
+    <script src="./WMS能力解析_files/ZeroClipboard.min.js.下载"></script>
+    <title>WMS能力解析</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./WMS能力解析_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./WMS能力解析_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/wms-capabilities.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMS能力解析</font></font></h4>
+          <pre class="log-container"><code id="log">{<font></font>
+  "version": "1.3.0",<font></font>
+  "Service": {<font></font>
+    "Name": "WMS",<font></font>
+    "Title": "Acme Corp. Map Server",<font></font>
+    "Abstract": "Map Server maintained by Acme Corporation.  Contact: webmaster@wmt.acme.com.  High-quality maps showing roadrunner nests and possible ambush locations.",<font></font>
+    "KeywordList": [<font></font>
+      "bird",<font></font>
+      "roadrunner",<font></font>
+      "ambush"<font></font>
+    ],<font></font>
+    "OnlineResource": "http://hostname/",<font></font>
+    "ContactInformation": {<font></font>
+      "ContactPersonPrimary": {<font></font>
+        "ContactPerson": "Jeff Smith",<font></font>
+        "ContactOrganization": "NASA"<font></font>
+      },<font></font>
+      "ContactPosition": "Computer Scientist",<font></font>
+      "ContactAddress": {<font></font>
+        "AddressType": "postal",<font></font>
+        "Address": "NASA Goddard Space Flight Center",<font></font>
+        "City": "Greenbelt",<font></font>
+        "StateOrProvince": "MD",<font></font>
+        "PostCode": "20771",<font></font>
+        "Country": "USA"<font></font>
+      },<font></font>
+      "ContactVoiceTelephone": "+1 301 555-1212",<font></font>
+      "ContactElectronicMailAddress": "user@host.com"<font></font>
+    },<font></font>
+    "Fees": "none",<font></font>
+    "AccessConstraints": "none",<font></font>
+    "LayerLimit": 16,<font></font>
+    "MaxWidth": 2048,<font></font>
+    "MaxHeight": 2048<font></font>
+  },<font></font>
+  "Capability": {<font></font>
+    "Request": {<font></font>
+      "GetCapabilities": {<font></font>
+        "Format": [<font></font>
+          "text/xml"<font></font>
+        ],<font></font>
+        "DCPType": [<font></font>
+          {<font></font>
+            "HTTP": {<font></font>
+              "Get": {<font></font>
+                "OnlineResource": "http://hostname/path?"<font></font>
+              },<font></font>
+              "Post": {<font></font>
+                "OnlineResource": "http://hostname/path?"<font></font>
+              }<font></font>
+            }<font></font>
+          }<font></font>
+        ]<font></font>
+      },<font></font>
+      "GetMap": {<font></font>
+        "Format": [<font></font>
+          "image/gif",<font></font>
+          "image/png",<font></font>
+          "image/jpeg"<font></font>
+        ],<font></font>
+        "DCPType": [<font></font>
+          {<font></font>
+            "HTTP": {<font></font>
+              "Get": {<font></font>
+                "OnlineResource": "http://hostname/path?"<font></font>
+              }<font></font>
+            }<font></font>
+          }<font></font>
+        ]<font></font>
+      },<font></font>
+      "GetFeatureInfo": {<font></font>
+        "Format": [<font></font>
+          "text/xml",<font></font>
+          "text/plain",<font></font>
+          "text/html"<font></font>
+        ],<font></font>
+        "DCPType": [<font></font>
+          {<font></font>
+            "HTTP": {<font></font>
+              "Get": {<font></font>
+                "OnlineResource": "http://hostname/path?"<font></font>
+              }<font></font>
+            }<font></font>
+          }<font></font>
+        ]<font></font>
+      }<font></font>
+    },<font></font>
+    "Exception": [<font></font>
+      "XML",<font></font>
+      "INIMAGE",<font></font>
+      "BLANK"<font></font>
+    ],<font></font>
+    "Layer": {<font></font>
+      "Title": "Acme Corp. Map Server",<font></font>
+      "CRS": [<font></font>
+        "CRS:84"<font></font>
+      ],<font></font>
+      "AuthorityURL": [<font></font>
+        {<font></font>
+          "OnlineResource": "http://gcmd.gsfc.nasa.gov/difguide/whatisadif.html",<font></font>
+          "name": "DIF_ID"<font></font>
+        }<font></font>
+      ],<font></font>
+      "BoundingBox": [<font></font>
+        {<font></font>
+          "crs": "CRS:84",<font></font>
+          "extent": [<font></font>
+            -1,<font></font>
+            -1,<font></font>
+            1,<font></font>
+            1<font></font>
+          ],<font></font>
+          "res": [<font></font>
+            0,<font></font>
+            0<font></font>
+          ]<font></font>
+        }<font></font>
+      ],<font></font>
+      "Layer": [<font></font>
+        {<font></font>
+          "Name": "ROADS_RIVERS",<font></font>
+          "Title": "Roads and Rivers",<font></font>
+          "CRS": [<font></font>
+            "EPSG:26986",<font></font>
+            "CRS:84"<font></font>
+          ],<font></font>
+          "EX_GeographicBoundingBox": [<font></font>
+            -71.63,<font></font>
+            41.75,<font></font>
+            -70.78,<font></font>
+            42.9<font></font>
+          ],<font></font>
+          "BoundingBox": [<font></font>
+            {<font></font>
+              "crs": "CRS:84",<font></font>
+              "extent": [<font></font>
+                -71.63,<font></font>
+                41.75,<font></font>
+                -70.78,<font></font>
+                42.9<font></font>
+              ],<font></font>
+              "res": [<font></font>
+                0.01,<font></font>
+                0.01<font></font>
+              ]<font></font>
+            },<font></font>
+            {<font></font>
+              "crs": "EPSG:26986",<font></font>
+              "extent": [<font></font>
+                189000,<font></font>
+                834000,<font></font>
+                285000,<font></font>
+                962000<font></font>
+              ],<font></font>
+              "res": [<font></font>
+                1,<font></font>
+                1<font></font>
+              ]<font></font>
+            }<font></font>
+          ],<font></font>
+          "Attribution": {<font></font>
+            "Title": "State College University",<font></font>
+            "OnlineResource": "http://www.university.edu/",<font></font>
+            "LogoURL": {<font></font>
+              "Format": "image/gif",<font></font>
+              "OnlineResource": "http://www.university.edu/icons/logo.gif",<font></font>
+              "size": [<font></font>
+                100,<font></font>
+                100<font></font>
+              ]<font></font>
+            }<font></font>
+          },<font></font>
+          "Identifier": [<font></font>
+            "123456"<font></font>
+          ],<font></font>
+          "FeatureListURL": [<font></font>
+            {<font></font>
+              "Format": "XML",<font></font>
+              "OnlineResource": "http://www.university.edu/data/roads_rivers.gml"<font></font>
+            }<font></font>
+          ],<font></font>
+          "Style": [<font></font>
+            {<font></font>
+              "Name": "USGS",<font></font>
+              "Title": "USGS Topo Map Style",<font></font>
+              "Abstract": "Features are shown in a style like that used in USGS topographic maps.",<font></font>
+              "LegendURL": [<font></font>
+                {<font></font>
+                  "Format": "image/gif",<font></font>
+                  "OnlineResource": "http://www.university.edu/legends/usgs.gif",<font></font>
+                  "size": [<font></font>
+                    72,<font></font>
+                    72<font></font>
+                  ]<font></font>
+                }<font></font>
+              ],<font></font>
+              "StyleSheetURL": {<font></font>
+                "Format": "text/xsl",<font></font>
+                "OnlineResource": "http://www.university.edu/stylesheets/usgs.xsl"<font></font>
+              }<font></font>
+            }<font></font>
+          ],<font></font>
+          "MinScaleDenominator": 1000,<font></font>
+          "MaxScaleDenominator": 250000,<font></font>
+          "Layer": [<font></font>
+            {<font></font>
+              "Name": "ROADS_1M",<font></font>
+              "Title": "Roads at 1:1M scale",<font></font>
+              "Abstract": "Roads at a scale of 1 to 1 million.",<font></font>
+              "KeywordList": [<font></font>
+                "road",<font></font>
+                "transportation",<font></font>
+                "atlas"<font></font>
+              ],<font></font>
+              "Identifier": [<font></font>
+                "123456"<font></font>
+              ],<font></font>
+              "MetadataURL": [<font></font>
+                {<font></font>
+                  "Format": "text/plain",<font></font>
+                  "OnlineResource": "http://www.university.edu/metadata/roads.txt",<font></font>
+                  "type": "FGDC:1998"<font></font>
+                },<font></font>
+                {<font></font>
+                  "Format": "text/xml",<font></font>
+                  "OnlineResource": "http://www.university.edu/metadata/roads.xml",<font></font>
+                  "type": "ISO19115:2003"<font></font>
+                }<font></font>
+              ],<font></font>
+              "Style": [<font></font>
+                {<font></font>
+                  "Name": "ATLAS",<font></font>
+                  "Title": "Road atlas style",<font></font>
+                  "Abstract": "Roads are shown in a style like that used in a commercial road atlas.",<font></font>
+                  "LegendURL": [<font></font>
+                    {<font></font>
+                      "Format": "image/gif",<font></font>
+                      "OnlineResource": "http://www.university.edu/legends/atlas.gif",<font></font>
+                      "size": [<font></font>
+                        72,<font></font>
+                        72<font></font>
+                      ]<font></font>
+                    }<font></font>
+                  ]<font></font>
+                },<font></font>
+                {<font></font>
+                  "Name": "USGS",<font></font>
+                  "Title": "USGS Topo Map Style",<font></font>
+                  "Abstract": "Features are shown in a style like that used in USGS topographic maps.",<font></font>
+                  "LegendURL": [<font></font>
+                    {<font></font>
+                      "Format": "image/gif",<font></font>
+                      "OnlineResource": "http://www.university.edu/legends/usgs.gif",<font></font>
+                      "size": [<font></font>
+                        72,<font></font>
+                        72<font></font>
+                      ]<font></font>
+                    }<font></font>
+                  ],<font></font>
+                  "StyleSheetURL": {<font></font>
+                    "Format": "text/xsl",<font></font>
+                    "OnlineResource": "http://www.university.edu/stylesheets/usgs.xsl"<font></font>
+                  }<font></font>
+                }<font></font>
+              ],<font></font>
+              "queryable": true,<font></font>
+              "opaque": false,<font></font>
+              "noSubsets": false,<font></font>
+              "CRS": [<font></font>
+                "EPSG:26986"<font></font>
+              ],<font></font>
+              "EX_GeographicBoundingBox": [<font></font>
+                -71.63,<font></font>
+                41.75,<font></font>
+                -70.78,<font></font>
+                42.9<font></font>
+              ],<font></font>
+              "BoundingBox": [<font></font>
+                {<font></font>
+                  "crs": "CRS:84",<font></font>
+                  "extent": [<font></font>
+                    -71.63,<font></font>
+                    41.75,<font></font>
+                    -70.78,<font></font>
+                    42.9<font></font>
+                  ],<font></font>
+                  "res": [<font></font>
+                    0.01,<font></font>
+                    0.01<font></font>
+                  ]<font></font>
+                },<font></font>
+                {<font></font>
+                  "crs": "EPSG:26986",<font></font>
+                  "extent": [<font></font>
+                    189000,<font></font>
+                    834000,<font></font>
+                    285000,<font></font>
+                    962000<font></font>
+                  ],<font></font>
+                  "res": [<font></font>
+                    1,<font></font>
+                    1<font></font>
+                  ]<font></font>
+                }<font></font>
+              ],<font></font>
+              "Attribution": {<font></font>
+                "Title": "State College University",<font></font>
+                "OnlineResource": "http://www.university.edu/",<font></font>
+                "LogoURL": {<font></font>
+                  "Format": "image/gif",<font></font>
+                  "OnlineResource": "http://www.university.edu/icons/logo.gif",<font></font>
+                  "size": [<font></font>
+                    100,<font></font>
+                    100<font></font>
+                  ]<font></font>
+                }<font></font>
+              },<font></font>
+              "MinScaleDenominator": 1000,<font></font>
+              "MaxScaleDenominator": 250000<font></font>
+            },<font></font>
+            {<font></font>
+              "Name": "RIVERS_1M",<font></font>
+              "Title": "Rivers at 1:1M scale",<font></font>
+              "Abstract": "Rivers at a scale of 1 to 1 million.",<font></font>
+              "KeywordList": [<font></font>
+                "river",<font></font>
+                "canal",<font></font>
+                "waterway"<font></font>
+              ],<font></font>
+              "queryable": true,<font></font>
+              "opaque": false,<font></font>
+              "noSubsets": false,<font></font>
+              "Style": [<font></font>
+                {<font></font>
+                  "Name": "USGS",<font></font>
+                  "Title": "USGS Topo Map Style",<font></font>
+                  "Abstract": "Features are shown in a style like that used in USGS topographic maps.",<font></font>
+                  "LegendURL": [<font></font>
+                    {<font></font>
+                      "Format": "image/gif",<font></font>
+                      "OnlineResource": "http://www.university.edu/legends/usgs.gif",<font></font>
+                      "size": [<font></font>
+                        72,<font></font>
+                        72<font></font>
+                      ]<font></font>
+                    }<font></font>
+                  ],<font></font>
+                  "StyleSheetURL": {<font></font>
+                    "Format": "text/xsl",<font></font>
+                    "OnlineResource": "http://www.university.edu/stylesheets/usgs.xsl"<font></font>
+                  }<font></font>
+                }<font></font>
+              ],<font></font>
+              "CRS": [<font></font>
+                "EPSG:26986"<font></font>
+              ],<font></font>
+              "EX_GeographicBoundingBox": [<font></font>
+                -71.63,<font></font>
+                41.75,<font></font>
+                -70.78,<font></font>
+                42.9<font></font>
+              ],<font></font>
+              "BoundingBox": [<font></font>
+                {<font></font>
+                  "crs": "CRS:84",<font></font>
+                  "extent": [<font></font>
+                    -71.63,<font></font>
+                    41.75,<font></font>
+                    -70.78,<font></font>
+                    42.9<font></font>
+                  ],<font></font>
+                  "res": [<font></font>
+                    0.01,<font></font>
+                    0.01<font></font>
+                  ]<font></font>
+                },<font></font>
+                {<font></font>
+                  "crs": "EPSG:26986",<font></font>
+                  "extent": [<font></font>
+                    189000,<font></font>
+                    834000,<font></font>
+                    285000,<font></font>
+                    962000<font></font>
+                  ],<font></font>
+                  "res": [<font></font>
+                    1,<font></font>
+                    1<font></font>
+                  ]<font></font>
+                }<font></font>
+              ],<font></font>
+              "Attribution": {<font></font>
+                "Title": "State College University",<font></font>
+                "OnlineResource": "http://www.university.edu/",<font></font>
+                "LogoURL": {<font></font>
+                  "Format": "image/gif",<font></font>
+                  "OnlineResource": "http://www.university.edu/icons/logo.gif",<font></font>
+                  "size": [<font></font>
+                    100,<font></font>
+                    100<font></font>
+                  ]<font></font>
+                }<font></font>
+              },<font></font>
+              "MinScaleDenominator": 1000,<font></font>
+              "MaxScaleDenominator": 250000<font></font>
+            }<font></font>
+          ],<font></font>
+          "queryable": false,<font></font>
+          "opaque": false,<font></font>
+          "noSubsets": false,<font></font>
+          "AuthorityURL": [<font></font>
+            {<font></font>
+              "OnlineResource": "http://gcmd.gsfc.nasa.gov/difguide/whatisadif.html",<font></font>
+              "name": "DIF_ID"<font></font>
+            }<font></font>
+          ]<font></font>
+        },<font></font>
+        {<font></font>
+          "Title": "Weather Forecast Data",<font></font>
+          "CRS": [<font></font>
+            "CRS:84",<font></font>
+            "CRS:84"<font></font>
+          ],<font></font>
+          "EX_GeographicBoundingBox": [<font></font>
+            -180,<font></font>
+            -90,<font></font>
+            180,<font></font>
+            90<font></font>
+          ],<font></font>
+          "Dimension": [<font></font>
+            {<font></font>
+              "name": "time",<font></font>
+              "units": "ISO8601",<font></font>
+              "unitSymbol": null,<font></font>
+              "default": "2000-08-22",<font></font>
+              "values": "1999-01-01/2000-08-22/P1D"<font></font>
+            }<font></font>
+          ],<font></font>
+          "Layer": [<font></font>
+            {<font></font>
+              "Name": "Clouds",<font></font>
+              "Title": "Forecast cloud cover",<font></font>
+              "queryable": false,<font></font>
+              "opaque": false,<font></font>
+              "noSubsets": false,<font></font>
+              "CRS": [<font></font>
+                "CRS:84"<font></font>
+              ],<font></font>
+              "EX_GeographicBoundingBox": [<font></font>
+                -180,<font></font>
+                -90,<font></font>
+                180,<font></font>
+                90<font></font>
+              ],<font></font>
+              "Dimension": [<font></font>
+                {<font></font>
+                  "name": "time",<font></font>
+                  "units": "ISO8601",<font></font>
+                  "unitSymbol": null,<font></font>
+                  "default": "2000-08-22",<font></font>
+                  "values": "1999-01-01/2000-08-22/P1D"<font></font>
+                }<font></font>
+              ]<font></font>
+            },<font></font>
+            {<font></font>
+              "Name": "Temperature",<font></font>
+              "Title": "Forecast temperature",<font></font>
+              "queryable": false,<font></font>
+              "opaque": false,<font></font>
+              "noSubsets": false,<font></font>
+              "CRS": [<font></font>
+                "CRS:84"<font></font>
+              ],<font></font>
+              "EX_GeographicBoundingBox": [<font></font>
+                -180,<font></font>
+                -90,<font></font>
+                180,<font></font>
+                90<font></font>
+              ],<font></font>
+              "Dimension": [<font></font>
+                {<font></font>
+                  "name": "time",<font></font>
+                  "units": "ISO8601",<font></font>
+                  "unitSymbol": null,<font></font>
+                  "default": "2000-08-22",<font></font>
+                  "values": "1999-01-01/2000-08-22/P1D"<font></font>
+                }<font></font>
+              ]<font></font>
+            },<font></font>
+            {<font></font>
+              "Name": "Pressure",<font></font>
+              "Title": "Forecast barometric pressure",<font></font>
+              "Dimension": [<font></font>
+                {<font></font>
+                  "name": "elevation",<font></font>
+                  "units": "EPSG:5030",<font></font>
+                  "unitSymbol": null,<font></font>
+                  "default": null,<font></font>
+                  "values": ""<font></font>
+                },<font></font>
+                {<font></font>
+                  "name": "time",<font></font>
+                  "units": "ISO8601",<font></font>
+                  "unitSymbol": null,<font></font>
+                  "default": "2000-08-22",<font></font>
+                  "values": "1999-01-01/2000-08-22/P1D"<font></font>
+                },<font></font>
+                {<font></font>
+                  "name": "elevation",<font></font>
+                  "units": "CRS:88",<font></font>
+                  "unitSymbol": null,<font></font>
+                  "default": "0",<font></font>
+                  "nearestValue": true,<font></font>
+                  "values": "0,1000,3000,5000,10000"<font></font>
+                }<font></font>
+              ],<font></font>
+              "queryable": false,<font></font>
+              "opaque": false,<font></font>
+              "noSubsets": false,<font></font>
+              "CRS": [<font></font>
+                "CRS:84"<font></font>
+              ],<font></font>
+              "EX_GeographicBoundingBox": [<font></font>
+                -180,<font></font>
+                -90,<font></font>
+                180,<font></font>
+                90<font></font>
+              ]<font></font>
+            }<font></font>
+          ],<font></font>
+          "queryable": true,<font></font>
+          "opaque": false,<font></font>
+          "noSubsets": false,<font></font>
+          "AuthorityURL": [<font></font>
+            {<font></font>
+              "OnlineResource": "http://gcmd.gsfc.nasa.gov/difguide/whatisadif.html",<font></font>
+              "name": "DIF_ID"<font></font>
+            }<font></font>
+          ],<font></font>
+          "BoundingBox": [<font></font>
+            {<font></font>
+              "crs": "CRS:84",<font></font>
+              "extent": [<font></font>
+                -1,<font></font>
+                -1,<font></font>
+                1,<font></font>
+                1<font></font>
+              ],<font></font>
+              "res": [<font></font>
+                0,<font></font>
+                0<font></font>
+              ]<font></font>
+            }<font></font>
+          ]<font></font>
+        },<font></font>
+        {<font></font>
+          "Name": "ozone_image",<font></font>
+          "Title": "Global ozone distribution (1992)",<font></font>
+          "EX_GeographicBoundingBox": [<font></font>
+            -180,<font></font>
+            -90,<font></font>
+            180,<font></font>
+            90<font></font>
+          ],<font></font>
+          "Dimension": [<font></font>
+            {<font></font>
+              "name": "time",<font></font>
+              "units": "ISO8601",<font></font>
+              "unitSymbol": null,<font></font>
+              "default": "1992",<font></font>
+              "values": "1992"<font></font>
+            }<font></font>
+          ],<font></font>
+          "queryable": false,<font></font>
+          "opaque": true,<font></font>
+          "noSubsets": true,<font></font>
+          "fixedWidth": 512,<font></font>
+          "fixedHeight": 256,<font></font>
+          "CRS": [<font></font>
+            "CRS:84"<font></font>
+          ],<font></font>
+          "AuthorityURL": [<font></font>
+            {<font></font>
+              "OnlineResource": "http://gcmd.gsfc.nasa.gov/difguide/whatisadif.html",<font></font>
+              "name": "DIF_ID"<font></font>
+            }<font></font>
+          ],<font></font>
+          "BoundingBox": [<font></font>
+            {<font></font>
+              "crs": "CRS:84",<font></font>
+              "extent": [<font></font>
+                -1,<font></font>
+                -1,<font></font>
+                1,<font></font>
+                1<font></font>
+              ],<font></font>
+              "res": [<font></font>
+                0,<font></font>
+                0<font></font>
+              ]<font></font>
+            }<font></font>
+          ]<font></font>
+        },<font></font>
+        {<font></font>
+          "Name": "population",<font></font>
+          "Title": "World population, annual",<font></font>
+          "EX_GeographicBoundingBox": [<font></font>
+            -180,<font></font>
+            -90,<font></font>
+            180,<font></font>
+            90<font></font>
+          ],<font></font>
+          "Dimension": [<font></font>
+            {<font></font>
+              "name": "time",<font></font>
+              "units": "ISO8601",<font></font>
+              "unitSymbol": null,<font></font>
+              "default": "2000",<font></font>
+              "values": "1990/2000/P1Y"<font></font>
+            }<font></font>
+          ],<font></font>
+          "queryable": false,<font></font>
+          "cascaded": 1,<font></font>
+          "opaque": false,<font></font>
+          "noSubsets": false,<font></font>
+          "CRS": [<font></font>
+            "CRS:84"<font></font>
+          ],<font></font>
+          "AuthorityURL": [<font></font>
+            {<font></font>
+              "OnlineResource": "http://gcmd.gsfc.nasa.gov/difguide/whatisadif.html",<font></font>
+              "name": "DIF_ID"<font></font>
+            }<font></font>
+          ],<font></font>
+          "BoundingBox": [<font></font>
+            {<font></font>
+              "crs": "CRS:84",<font></font>
+              "extent": [<font></font>
+                -1,<font></font>
+                -1,<font></font>
+                1,<font></font>
+                1<font></font>
+              ],<font></font>
+              "res": [<font></font>
+                0,<font></font>
+                0<font></font>
+              ]<font></font>
+            }<font></font>
+          ]<font></font>
+        }<font></font>
+      ]<font></font>
+    }<font></font>
+  }<font></font>
+}</code></pre>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解析WMS GetCapabilities响应的示例。</font></font></p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此示例从解析WMS功能响应中显示结果对象的内容。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.format.WMSCapabilities.html" title="ol.format.WMSCapabilities的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.format.WMSCapabilities</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">WMS Capabilities Parsing</textarea>
+          <textarea class="hidden" name="description">Example of parsing a WMS GetCapabilities response.</textarea>
+          <textarea class="hidden" name="js">var parser = new ol.format.WMSCapabilities();
+
+fetch('https://openlayers.org/en/v4.4.2/examples/data/ogcsample.xml').then(function(response) {
+  return response.text();
+}).then(function(text) {
+  var result = parser.read(text);
+  document.getElementById('log').innerText = JSON.stringify(result, null, 2);
+});
+</textarea>
+          <textarea class="hidden" name="css">.log-container {
+  height: 400px;
+  overflow: scroll;
+}
+</textarea>
+          <textarea class="hidden" name="html">&lt;pre class="log-container"&gt;&lt;code id="log"&gt;&lt;/code&gt;&lt;/pre&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>WMS Capabilities Parsing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">.log-container </span><span class="token punctuation">{</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+        <span class="token property">overflow</span><span class="token punctuation">:</span> scroll<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>log-container<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>log<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> parser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>format<span class="token punctuation">.</span>WMSCapabilities</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'https://openlayers.org/en/v4.4.2/examples/data/ogcsample.xml'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> response<span class="token punctuation">.</span><span class="token function">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'log'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerText <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./WMS能力解析_files/common.js.下载"></script>
+    <script src="./WMS能力解析_files/prism.min.js.下载"></script>
+    <script src="./WMS能力解析_files/loader.js.下载"></script><script type="text/javascript" src="./WMS能力解析_files/ol.js.下载"></script><script type="text/javascript" src="./WMS能力解析_files/wms-capabilities.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./WMS能力解析_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

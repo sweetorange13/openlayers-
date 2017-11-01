@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)http://openlayers.org/en/latest/examples/vector-esri-edit.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./可编辑的ArcGIS REST功能服务_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./可编辑的ArcGIS REST功能服务_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./可编辑的ArcGIS REST功能服务_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./可编辑的ArcGIS REST功能服务_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./可编辑的ArcGIS REST功能服务_files/layout.css" type="text/css">
+    <script src="./可编辑的ArcGIS REST功能服务_files/jquery-2.2.3.min.js.下载"></script>
+    
+    <script src="./可编辑的ArcGIS REST功能服务_files/polyfill.min.js.下载"></script>
+    <script src="./可编辑的ArcGIS REST功能服务_files/ZeroClipboard.min.js.下载"></script>
+    <title>可编辑的ArcGIS REST功能服务</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./可编辑的ArcGIS REST功能服务_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./可编辑的ArcGIS REST功能服务_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/vector-esri-edit.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">可编辑的ArcGIS REST功能服务</font></font></h4>
+          <div id="map" class="map"><div class="ol-viewport" data-view="27" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">瓷砖© </font></font><a href="https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ArcGIS</font></font></a></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+<form class="form-inline">
+  <label><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">绘制或修改 &nbsp;</font></font></label>
+  <select id="type">
+    <option value="DRAW"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">画</font></font></option>
+    <option value="MODIFY"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">修改</font></font></option>
+  </select>
+</form>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在编辑应用程序中使用ArcGIS REST Feature Service的示例。</font></font></p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此示例从ArcGIS REST Feature Service加载功能，并允许添加新功能或更新现有功能。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.format.EsriJSON.html" title="ol.format.EsriJSON的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.format.EsriJSON</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.html" title="用于ol.interaction的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.Draw.html" title="ol.interaction.Draw的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction.Draw</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.Modify.html" title="ol.interaction.Modify的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction.Modify</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.interaction.Select.html" title="ol.interaction.Select的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.interaction.Select</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html" title="ol.layer.Tile的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Tile</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Vector.html" title="ol.layer.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.loadingstrategy.html" title="ol.loadingstrategy的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.loadingstrategy</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.proj.html" title="ol.proj的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.proj</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.Vector.html" title="ol.source.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.XYZ.html" title="ol.source.XYZ的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.XYZ</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.tilegrid.html" title="ol.tilegrid的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.tilegrid</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Editable ArcGIS REST Feature Service</textarea>
+          <textarea class="hidden" name="description">Example of using an ArcGIS REST Feature Service in an editing application.</textarea>
+          <textarea class="hidden" name="js">var serviceUrl = 'https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/' +
+    'services/PDX_Pedestrian_Districts/FeatureServer/';
+var layer = '0';
+
+var esrijsonFormat = new ol.format.EsriJSON();
+
+var vectorSource = new ol.source.Vector({
+  loader: function(extent, resolution, projection) {
+    var url = serviceUrl + layer + '/query/?f=json&amp;' +
+        'returnGeometry=true&amp;spatialRel=esriSpatialRelIntersects&amp;geometry=' +
+        encodeURIComponent('{"xmin":' + extent[0] + ',"ymin":' +
+            extent[1] + ',"xmax":' + extent[2] + ',"ymax":' + extent[3] +
+            ',"spatialReference":{"wkid":102100}}') +
+        '&amp;geometryType=esriGeometryEnvelope&amp;inSR=102100&amp;outFields=*' +
+        '&amp;outSR=102100';
+    $.ajax({url: url, dataType: 'jsonp', success: function(response) {
+      if (response.error) {
+        alert(response.error.message + '\n' +
+            response.error.details.join('\n'));
+      } else {
+        // dataProjection will be read from document
+        var features = esrijsonFormat.readFeatures(response, {
+          featureProjection: projection
+        });
+        if (features.length &gt; 0) {
+          vectorSource.addFeatures(features);
+        }
+      }
+    }});
+  },
+  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+    tileSize: 512
+  }))
+});
+
+var vector = new ol.layer.Vector({
+  source: vectorSource
+});
+
+var raster = new ol.layer.Tile({
+  source: new ol.source.XYZ({
+    attributions: 'Tiles © &lt;a href="https://services.arcgisonline.com/ArcGIS/' +
+        'rest/services/World_Topo_Map/MapServer"&gt;ArcGIS&lt;/a&gt;',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/' +
+        'World_Topo_Map/MapServer/tile/{z}/{y}/{x}'
+  })
+});
+
+var draw = new ol.interaction.Draw({
+  source: vectorSource,
+  type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+});
+
+var select = new ol.interaction.Select();
+select.setActive(false);
+var selected = select.getFeatures();
+
+var modify = new ol.interaction.Modify({
+  features: selected
+});
+modify.setActive(false);
+
+var map = new ol.Map({
+  interactions: ol.interaction.defaults().extend([draw, select, modify]),
+  layers: [raster, vector],
+  target: document.getElementById('map'),
+  view: new ol.View({
+    center: ol.proj.transform([-122.619, 45.512], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 12
+  })
+});
+
+var typeSelect = document.getElementById('type');
+
+
+/**
+ * Let user change the interaction type.
+ */
+typeSelect.onchange = function() {
+  draw.setActive(typeSelect.value === 'DRAW');
+  select.setActive(typeSelect.value === 'MODIFY');
+  modify.setActive(typeSelect.value === 'MODIFY');
+};
+
+var dirty = {};
+
+selected.on('add', function(evt) {
+  var feature = evt.element;
+  feature.on('change', function(evt) {
+    dirty[evt.target.getId()] = true;
+  });
+});
+
+selected.on('remove', function(evt) {
+  var feature = evt.element;
+  var fid = feature.getId();
+  if (dirty[fid] === true) {
+    var payload = '[' + esrijsonFormat.writeFeature(feature, {
+      featureProjection: map.getView().getProjection()
+    }) + ']';
+    var url = serviceUrl + layer + '/updateFeatures';
+    $.post(url, {f: 'json', features: payload}).done(function(data) {
+      var result = JSON.parse(data);
+      if (result.updateResults &amp;&amp; result.updateResults.length &gt; 0) {
+        if (result.updateResults[0].success !== true) {
+          var error = result.updateResults[0].error;
+          alert(error.description + ' (' + error.code + ')');
+        } else {
+          delete dirty[fid];
+        }
+      }
+    });
+  }
+});
+
+draw.on('drawend', function(evt) {
+  var feature = evt.feature;
+  var payload = '[' + esrijsonFormat.writeFeature(feature, {
+    featureProjection: map.getView().getProjection()
+  }) + ']';
+  var url = serviceUrl + layer + '/addFeatures';
+  $.post(url, {f: 'json', features: payload}).done(function(data) {
+    var result = JSON.parse(data);
+    if (result.addResults &amp;&amp; result.addResults.length &gt; 0) {
+      if (result.addResults[0].success === true) {
+        feature.setId(result.addResults[0]['objectId']);
+        vectorSource.clear();
+      } else {
+        var error = result.addResults[0].error;
+        alert(error.description + ' (' + error.code + ')');
+      }
+    }
+  });
+});
+</textarea>
+          <textarea class="hidden" name="css"></textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+&lt;form class="form-inline"&gt;
+  &lt;label&gt;Draw or modify &amp;nbsp;&lt;/label&gt;
+  &lt;select id="type"&gt;
+    &lt;option value="DRAW"&gt;Draw&lt;/option&gt;
+    &lt;option value="MODIFY"&gt;Modify&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js,https://code.jquery.com/jquery-2.2.3.min.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Editable ArcGIS REST Feature Service<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://code.jquery.com/jquery-2.2.3.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>form-inline<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>Draw or modify <span class="token entity" title=" ">&amp;nbsp;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>type<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>DRAW<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Draw<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>MODIFY<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Modify<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> serviceUrl <span class="token operator">=</span> <span class="token string">'https://services.arcgis.com/rOo16HdIMeOBI4Mb/arcgis/rest/'</span> <span class="token operator">+</span>
+          <span class="token string">'services/PDX_Pedestrian_Districts/FeatureServer/'</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> layer <span class="token operator">=</span> <span class="token string">'0'</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> esrijsonFormat <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>format<span class="token punctuation">.</span>EsriJSON</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> vectorSource <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        loader<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>extent<span class="token punctuation">,</span> resolution<span class="token punctuation">,</span> projection<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> url <span class="token operator">=</span> serviceUrl <span class="token operator">+</span> layer <span class="token operator">+</span> <span class="token string">'/query/?f=json&amp;'</span> <span class="token operator">+</span>
+              <span class="token string">'returnGeometry=true&amp;spatialRel=esriSpatialRelIntersects&amp;geometry='</span> <span class="token operator">+</span>
+              <span class="token function">encodeURIComponent</span><span class="token punctuation">(</span><span class="token string">'{"xmin":'</span> <span class="token operator">+</span> extent<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">',"ymin":'</span> <span class="token operator">+</span>
+                  extent<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">',"xmax":'</span> <span class="token operator">+</span> extent<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">',"ymax":'</span> <span class="token operator">+</span> extent<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">+</span>
+                  <span class="token string">',"spatialReference":{"wkid":102100}}'</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+              <span class="token string">'&amp;geometryType=esriGeometryEnvelope&amp;inSR=102100&amp;outFields=*'</span> <span class="token operator">+</span>
+              <span class="token string">'&amp;outSR=102100'</span><span class="token punctuation">;</span>
+          $<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">{</span>url<span class="token punctuation">:</span> url<span class="token punctuation">,</span> dataType<span class="token punctuation">:</span> <span class="token string">'jsonp'</span><span class="token punctuation">,</span> success<span class="token punctuation">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>response<span class="token punctuation">.</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token function">alert</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>error<span class="token punctuation">.</span>message <span class="token operator">+</span> <span class="token string">'\n'</span> <span class="token operator">+</span>
+                  response<span class="token punctuation">.</span>error<span class="token punctuation">.</span>details<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+              <span class="token comment" spellcheck="true">// dataProjection will be read from document</span>
+              <span class="token keyword">var</span> features <span class="token operator">=</span> esrijsonFormat<span class="token punctuation">.</span><span class="token function">readFeatures</span><span class="token punctuation">(</span>response<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+                featureProjection<span class="token punctuation">:</span> projection
+              <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>features<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                vectorSource<span class="token punctuation">.</span><span class="token function">addFeatures</span><span class="token punctuation">(</span>features<span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        strategy<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>loadingstrategy<span class="token punctuation">.</span><span class="token function">tile</span><span class="token punctuation">(</span>ol<span class="token punctuation">.</span>tilegrid<span class="token punctuation">.</span><span class="token function">createXYZ</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          tileSize<span class="token punctuation">:</span> <span class="token number">512</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> vector <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> vectorSource
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> raster <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>XYZ</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          attributions<span class="token punctuation">:</span> <span class="token string">'Tiles © &lt;a href="https://services.arcgisonline.com/ArcGIS/'</span> <span class="token operator">+</span>
+              <span class="token string">'rest/services/World_Topo_Map/MapServer"&gt;ArcGIS&lt;/a&gt;'</span><span class="token punctuation">,</span>
+          url<span class="token punctuation">:</span> <span class="token string">'https://server.arcgisonline.com/ArcGIS/rest/services/'</span> <span class="token operator">+</span>
+              <span class="token string">'World_Topo_Map/MapServer/tile/{z}/{y}/{x}'</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> draw <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span>Draw</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> vectorSource<span class="token punctuation">,</span>
+        type<span class="token punctuation">:</span> <span class="token comment" spellcheck="true">/** @type {ol.geom.GeometryType} */</span> <span class="token punctuation">(</span><span class="token string">'Polygon'</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> select <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span>Select</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      select<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> selected <span class="token operator">=</span> select<span class="token punctuation">.</span><span class="token function">getFeatures</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> modify <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span>Modify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        features<span class="token punctuation">:</span> selected
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      modify<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span><span class="token keyword">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        interactions<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>interaction<span class="token punctuation">.</span><span class="token function">defaults</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">[</span>draw<span class="token punctuation">,</span> select<span class="token punctuation">,</span> modify<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        layers<span class="token punctuation">:</span> <span class="token punctuation">[</span>raster<span class="token punctuation">,</span> vector<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'map'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          center<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>proj<span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">122.619</span><span class="token punctuation">,</span> <span class="token number">45.512</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'EPSG:4326'</span><span class="token punctuation">,</span> <span class="token string">'EPSG:3857'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          zoom<span class="token punctuation">:</span> <span class="token number">12</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> typeSelect <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'type'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Let user change the interaction type.
+       */</span>
+      typeSelect<span class="token punctuation">.</span>onchange <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        draw<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span>typeSelect<span class="token punctuation">.</span>value <span class="token operator">===</span> <span class="token string">'DRAW'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        select<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span>typeSelect<span class="token punctuation">.</span>value <span class="token operator">===</span> <span class="token string">'MODIFY'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        modify<span class="token punctuation">.</span><span class="token function">setActive</span><span class="token punctuation">(</span>typeSelect<span class="token punctuation">.</span>value <span class="token operator">===</span> <span class="token string">'MODIFY'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> dirty <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      selected<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'add'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> feature <span class="token operator">=</span> evt<span class="token punctuation">.</span>element<span class="token punctuation">;</span>
+        feature<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          dirty<span class="token punctuation">[</span>evt<span class="token punctuation">.</span>target<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">true</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      selected<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'remove'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> feature <span class="token operator">=</span> evt<span class="token punctuation">.</span>element<span class="token punctuation">;</span>
+        <span class="token keyword">var</span> fid <span class="token operator">=</span> feature<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>dirty<span class="token punctuation">[</span>fid<span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token keyword">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> payload <span class="token operator">=</span> <span class="token string">'['</span> <span class="token operator">+</span> esrijsonFormat<span class="token punctuation">.</span><span class="token function">writeFeature</span><span class="token punctuation">(</span>feature<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            featureProjection<span class="token punctuation">:</span> map<span class="token punctuation">.</span><span class="token function">getView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getProjection</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">']'</span><span class="token punctuation">;</span>
+          <span class="token keyword">var</span> url <span class="token operator">=</span> serviceUrl <span class="token operator">+</span> layer <span class="token operator">+</span> <span class="token string">'/updateFeatures'</span><span class="token punctuation">;</span>
+          $<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> <span class="token punctuation">{</span>f<span class="token punctuation">:</span> <span class="token string">'json'</span><span class="token punctuation">,</span> features<span class="token punctuation">:</span> payload<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">var</span> result <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span>updateResults <span class="token operator">&amp;&amp;</span> result<span class="token punctuation">.</span>updateResults<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span>updateResults<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>success <span class="token operator">!</span><span class="token operator">==</span> <span class="token keyword">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">var</span> error <span class="token operator">=</span> result<span class="token punctuation">.</span>updateResults<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>error<span class="token punctuation">;</span>
+                <span class="token function">alert</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>description <span class="token operator">+</span> <span class="token string">' ('</span> <span class="token operator">+</span> error<span class="token punctuation">.</span>code <span class="token operator">+</span> <span class="token string">')'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">delete</span> dirty<span class="token punctuation">[</span>fid<span class="token punctuation">]</span><span class="token punctuation">;</span>
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      draw<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'drawend'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> feature <span class="token operator">=</span> evt<span class="token punctuation">.</span>feature<span class="token punctuation">;</span>
+        <span class="token keyword">var</span> payload <span class="token operator">=</span> <span class="token string">'['</span> <span class="token operator">+</span> esrijsonFormat<span class="token punctuation">.</span><span class="token function">writeFeature</span><span class="token punctuation">(</span>feature<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          featureProjection<span class="token punctuation">:</span> map<span class="token punctuation">.</span><span class="token function">getView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getProjection</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">']'</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> url <span class="token operator">=</span> serviceUrl <span class="token operator">+</span> layer <span class="token operator">+</span> <span class="token string">'/addFeatures'</span><span class="token punctuation">;</span>
+        $<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> <span class="token punctuation">{</span>f<span class="token punctuation">:</span> <span class="token string">'json'</span><span class="token punctuation">,</span> features<span class="token punctuation">:</span> payload<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">done</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">var</span> result <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span>addResults <span class="token operator">&amp;&amp;</span> result<span class="token punctuation">.</span>addResults<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span>addResults<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>success <span class="token operator">===</span> <span class="token keyword">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              feature<span class="token punctuation">.</span><span class="token function">setId</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>addResults<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'objectId'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              vectorSource<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+              <span class="token keyword">var</span> error <span class="token operator">=</span> result<span class="token punctuation">.</span>addResults<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>error<span class="token punctuation">;</span>
+              <span class="token function">alert</span><span class="token punctuation">(</span>error<span class="token punctuation">.</span>description <span class="token operator">+</span> <span class="token string">' ('</span> <span class="token operator">+</span> error<span class="token punctuation">.</span>code <span class="token operator">+</span> <span class="token string">')'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./可编辑的ArcGIS REST功能服务_files/common.js.下载"></script>
+    <script src="./可编辑的ArcGIS REST功能服务_files/prism.min.js.下载"></script>
+    <script src="./可编辑的ArcGIS REST功能服务_files/loader.js.下载"></script><script type="text/javascript" src="./可编辑的ArcGIS REST功能服务_files/ol.js.下载"></script><script type="text/javascript" src="./可编辑的ArcGIS REST功能服务_files/vector-esri-edit.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./可编辑的ArcGIS REST功能服务_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

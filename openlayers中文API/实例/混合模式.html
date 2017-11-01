@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)http://openlayers.org/en/latest/examples/blend-modes.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./混合模式_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./混合模式_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./混合模式_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./混合模式_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./混合模式_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./混合模式_files/blend-modes.css">
+    <script src="./混合模式_files/polyfill.min.js.下载"></script>
+    <script src="./混合模式_files/ZeroClipboard.min.js.下载"></script>
+    <title>混合模式</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./混合模式_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./混合模式_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/blend-modes.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">混合模式</font></font></h4>
+          <div id="map" class="map"><div class="ol-viewport" data-view="13" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed ol-logo-only"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+<form class="form-horizontal">
+  <label>
+    <select id="blend-mode" class="form-control">
+      <option value="source-over"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">源代码（默认）</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">源在</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">源出</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">源之上</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">目的地在</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">目的地在</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">目的地出</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">目的地顶上</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">打火机</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">复制</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">XOR</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">乘</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">屏幕</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">覆盖</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">变暗</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">减轻</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">颜色减淡</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">颜色烧伤</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">硬光</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">柔光</font></font></option>
+      <option selected=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">区别</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">排除</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">色调</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">饱和</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">颜色</font></font></option>
+      <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">亮度</font></font></option>
+    </select><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+    帆布合成/混合模式
+  </font></font></label>
+  <label>
+    <input type="checkbox" id="affect-red" checked=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+    红圈受影响
+  </font></font></label>
+  <label>
+    <input type="checkbox" id="affect-green" checked=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+    绿圈受影响
+  </font></font></label>
+  <label>
+    <input type="checkbox" id="affect-blue" checked=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+    蓝色圆圈受影响
+  </font></font></label>
+</form>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">显示如何在后处理和预处理事件处理程序中更改画布合成/混合模式。</font></font></p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此示例显示如何在后处理和预处理事件处理程序中更改画布合成/混合模式。</font><font style="vertical-align: inherit;">画布2D API提供了</font></font><code>globalCompositeOperation</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在画布上绘制时可以使用哪种组合操作</font><font style="vertical-align: inherit;">的属性</font><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">各种选项在</font></font><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">MDN文档页面</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">上有很好的描述</font><font style="vertical-align: inherit;">。</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">在这个例子中，等边三角形角上的三个圆圈分别用红色，绿色或蓝色样式绘制。</font><font style="vertical-align: inherit;">通过设置，</font></font><code>globalCompositeOperation</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">您可以在地图上组合时更改这些颜色的显示方式。</font></font></p>
+<p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">您可以在选择字段中选择一个操作，还可以通过层复选框来控制哪些层受到所选操作的影响。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Feature.html" title="ol.Feature的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Feature</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.geom.Point.html" title="ol.geom.Point的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.geom.Point</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Vector.html" title="ol.layer.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.Vector.html" title="ol.source.Vector的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.Vector</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Circle.html" title="ol.style.Circle的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Circle</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Fill.html" title="ol.style.Fill的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Fill</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Stroke.html" title="ol.style.Stroke的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Stroke</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.style.Style.html" title="ol.style.Style的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.style.Style</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Blend Modes</textarea>
+          <textarea class="hidden" name="description">Shows how to change the canvas compositing / blending mode in post- and precompose eventhandlers.</textarea>
+          <textarea class="hidden" name="js">// Create separate layers for red, green an blue circles.
+//
+// Every layer has one feature that is styled with a circle, together the
+// features form the corners of an equilateral triangle and their styles overlap
+var redLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({
+    features: [new ol.Feature(new ol.geom.Point([0, 0]))]
+  }),
+  style: new ol.style.Style({
+    image: new ol.style.Circle({
+      fill: new ol.style.Fill({
+        color: 'rgba(255,0,0,0.8)'
+      }),
+      stroke: new ol.style.Stroke({
+        color: 'rgb(255,0,0)',
+        width: 15
+      }),
+      radius: 120
+    })
+  })
+});
+var greenLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({
+    // 433.013 is roughly 250 * Math.sqrt(3)
+    features: [new ol.Feature(new ol.geom.Point([250, 433.013]))]
+  }),
+  style: new ol.style.Style({
+    image: new ol.style.Circle({
+      fill: new ol.style.Fill({
+        color: 'rgba(0,255,0,0.8)'
+      }),
+      stroke: new ol.style.Stroke({
+        color: 'rgb(0,255,0)',
+        width: 15
+      }),
+      radius: 120
+    })
+  })
+});
+var blueLayer = new ol.layer.Vector({
+  source: new ol.source.Vector({
+    features: [new ol.Feature(new ol.geom.Point([500, 0]))]
+  }),
+  style: new ol.style.Style({
+    image: new ol.style.Circle({
+      fill: new ol.style.Fill({
+        color: 'rgba(0,0,255,0.8)'
+      }),
+      stroke: new ol.style.Stroke({
+        color: 'rgb(0,0,255)',
+        width: 15
+      }),
+      radius: 120
+    })
+  })
+});
+
+// Create the map, the view is centered on the triangle. Zooming and panning is
+// restricted to a sane area
+var map = new ol.Map({
+  layers: [
+    redLayer,
+    greenLayer,
+    blueLayer
+  ],
+  target: 'map',
+  view: new ol.View({
+    center: [250, 220],
+    extent: [0, 0, 500, 500],
+    resolution: 4,
+    minResolution: 2,
+    maxResolution: 32
+  })
+});
+
+// Get the form elements and bind the listeners
+var select = document.getElementById('blend-mode');
+var affectRed = document.getElementById('affect-red');
+var affectGreen = document.getElementById('affect-green');
+var affectBlue = document.getElementById('affect-blue');
+
+
+/**
+ * This method sets the globalCompositeOperation to the value of the select
+ * field and it is bound to the precompose event of the layers.
+ *
+ * @param {ol.render.Event} evt The render event.
+ */
+var setBlendModeFromSelect = function(evt) {
+  evt.context.globalCompositeOperation = select.value;
+};
+
+
+/**
+ * This method resets the globalCompositeOperation to the default value of
+ * 'source-over' and it is bound to the postcompose event of the layers.
+ *
+ * @param {ol.render.Event} evt The render event.
+ */
+var resetBlendModeFromSelect = function(evt) {
+  evt.context.globalCompositeOperation = 'source-over';
+};
+
+
+/**
+ * Bind the pre- and postcompose handlers to the passed layer.
+ *
+ * @param {ol.layer.Vector} layer The layer to bind the handlers to.
+ */
+var bindLayerListeners = function(layer) {
+  layer.on('precompose', setBlendModeFromSelect);
+  layer.on('postcompose', resetBlendModeFromSelect);
+};
+
+
+/**
+ * Unind the pre- and postcompose handlers to the passed layers.
+ *
+ * @param {ol.layer.Vector} layer The layer to unbind the handlers from.
+ */
+var unbindLayerListeners = function(layer) {
+  layer.un('precompose', setBlendModeFromSelect);
+  layer.un('postcompose', resetBlendModeFromSelect);
+};
+
+
+/**
+ * Handler for the click event of the 'affect-XXX' checkboxes.
+ *
+ * @this {HTMLInputElement}
+ */
+var affectLayerClicked = function() {
+  var layer;
+  if (this.id == 'affect-red') {
+    layer = redLayer;
+  } else if (this.id == 'affect-green') {
+    layer = greenLayer;
+  } else {
+    layer = blueLayer;
+  }
+  if (this.checked) {
+    bindLayerListeners(layer);
+  } else {
+    unbindLayerListeners(layer);
+  }
+  map.render();
+};
+
+
+// Rerender map when blend mode changes
+select.addEventListener('change', function() {
+  map.render();
+});
+
+// Unbind / bind listeners depending on the checked state when the checkboxes
+// are clicked
+affectRed.addEventListener('click', affectLayerClicked);
+affectGreen.addEventListener('click', affectLayerClicked);
+affectBlue.addEventListener('click', affectLayerClicked);
+
+// Initially bind listeners
+bindLayerListeners(redLayer);
+bindLayerListeners(greenLayer);
+bindLayerListeners(blueLayer);
+</textarea>
+          <textarea class="hidden" name="css">.map{
+  background-repeat: repeat;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAApSURBVBiVY7x///5/BjSgqKjIiC7GhC6ACwygQgxHMzAwMGDz4FDwDAD5/wevjSk4mwAAAABJRU5ErkJggg==);
+}
+</textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+&lt;form class="form-horizontal"&gt;
+  &lt;label&gt;
+    &lt;select id="blend-mode" class="form-control"&gt;
+      &lt;option value="source-over"&gt;source-over (default)&lt;/option&gt;
+      &lt;option&gt;source-in&lt;/option&gt;
+      &lt;option&gt;source-out&lt;/option&gt;
+      &lt;option&gt;source-atop&lt;/option&gt;
+      &lt;option&gt;destination-over&lt;/option&gt;
+      &lt;option&gt;destination-in&lt;/option&gt;
+      &lt;option&gt;destination-out&lt;/option&gt;
+      &lt;option&gt;destination-atop&lt;/option&gt;
+      &lt;option&gt;lighter&lt;/option&gt;
+      &lt;option&gt;copy&lt;/option&gt;
+      &lt;option&gt;xor&lt;/option&gt;
+      &lt;option&gt;multiply&lt;/option&gt;
+      &lt;option&gt;screen&lt;/option&gt;
+      &lt;option&gt;overlay&lt;/option&gt;
+      &lt;option&gt;darken&lt;/option&gt;
+      &lt;option&gt;lighten&lt;/option&gt;
+      &lt;option&gt;color-dodge&lt;/option&gt;
+      &lt;option&gt;color-burn&lt;/option&gt;
+      &lt;option&gt;hard-light&lt;/option&gt;
+      &lt;option&gt;soft-light&lt;/option&gt;
+      &lt;option selected&gt;difference&lt;/option&gt;
+      &lt;option&gt;exclusion&lt;/option&gt;
+      &lt;option&gt;hue&lt;/option&gt;
+      &lt;option&gt;saturation&lt;/option&gt;
+      &lt;option&gt;color&lt;/option&gt;
+      &lt;option&gt;luminosity&lt;/option&gt;
+    &lt;/select&gt;
+    Canvas compositing / blending mode
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type="checkbox" id="affect-red" checked&gt;
+    Red circle affected
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type="checkbox" id="affect-green" checked&gt;
+    Green circle affected
+  &lt;/label&gt;
+  &lt;label&gt;
+    &lt;input type="checkbox" id="affect-blue" checked&gt;
+    Blue circle affected
+  &lt;/label&gt;
+&lt;/form&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Blend Modes<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">.map</span><span class="token punctuation">{</span>
+        <span class="token property">background-repeat</span><span class="token punctuation">:</span> repeat<span class="token punctuation">;</span>
+        <span class="token property">background-image</span><span class="token punctuation">:</span> <span class="token url">url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAApSURBVBiVY7x///5/BjSgqKjIiC7GhC6ACwygQgxHMzAwMGDz4FDwDAD5/wevjSk4mwAAAABJRU5ErkJggg==)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>form-horizontal<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>blend-mode<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>form-control<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>source-over<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>source-over (default)<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>source-in<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>source-out<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>source-atop<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>destination-over<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>destination-in<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>destination-out<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>destination-atop<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>lighter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>copy<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>xor<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>multiply<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>screen<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>overlay<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>darken<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>lighten<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>color-dodge<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>color-burn<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>hard-light<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>soft-light<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">selected</span><span class="token punctuation">&gt;</span></span>difference<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>exclusion<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>hue<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>saturation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>color<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span><span class="token punctuation">&gt;</span></span>luminosity<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span><font></font>
+        Canvas compositing / blending mode<font></font>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>checkbox<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>affect-red<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span><font></font>
+        Red circle affected<font></font>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>checkbox<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>affect-green<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span><font></font>
+        Green circle affected<font></font>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>checkbox<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>affect-blue<span class="token punctuation">"</span></span> <span class="token attr-name">checked</span><span class="token punctuation">&gt;</span></span><font></font>
+        Blue circle affected<font></font>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment" spellcheck="true">// Create separate layers for red, green an blue circles.</span>
+      <span class="token operator">/</span><span class="token operator">/</span>
+      <span class="token comment" spellcheck="true">// Every layer has one feature that is styled with a circle, together the</span>
+      <span class="token comment" spellcheck="true">// features form the corners of an equilateral triangle and their styles overlap</span>
+      <span class="token keyword">var</span> redLayer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          features<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Feature</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>geom<span class="token punctuation">.</span>Point</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        style<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Circle</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            fill<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgba(255,0,0,0.8)'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            stroke<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Stroke</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgb(255,0,0)'</span><span class="token punctuation">,</span>
+              width<span class="token punctuation">:</span> <span class="token number">15</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            radius<span class="token punctuation">:</span> <span class="token number">120</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> greenLayer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          <span class="token comment" spellcheck="true">// 433.013 is roughly 250 * Math.sqrt(3)</span>
+          features<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Feature</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>geom<span class="token punctuation">.</span>Point</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">433.013</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        style<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Circle</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            fill<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgba(0,255,0,0.8)'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            stroke<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Stroke</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgb(0,255,0)'</span><span class="token punctuation">,</span>
+              width<span class="token punctuation">:</span> <span class="token number">15</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            radius<span class="token punctuation">:</span> <span class="token number">120</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> blueLayer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>Vector</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          features<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Feature</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>geom<span class="token punctuation">.</span>Point</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        style<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Style</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          image<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Circle</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            fill<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Fill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgba(0,0,255,0.8)'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            stroke<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>style<span class="token punctuation">.</span>Stroke</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+              color<span class="token punctuation">:</span> <span class="token string">'rgb(0,0,255)'</span><span class="token punctuation">,</span>
+              width<span class="token punctuation">:</span> <span class="token number">15</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+            radius<span class="token punctuation">:</span> <span class="token number">120</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// Create the map, the view is centered on the triangle. Zooming and panning is</span>
+      <span class="token comment" spellcheck="true">// restricted to a sane area</span>
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        layers<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+          redLayer<span class="token punctuation">,</span>
+          greenLayer<span class="token punctuation">,</span>
+          blueLayer
+        <span class="token punctuation">]</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> <span class="token string">'map'</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          center<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">220</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          extent<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          resolution<span class="token punctuation">:</span> <span class="token number">4</span><span class="token punctuation">,</span>
+          minResolution<span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+          maxResolution<span class="token punctuation">:</span> <span class="token number">32</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// Get the form elements and bind the listeners</span>
+      <span class="token keyword">var</span> select <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'blend-mode'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> affectRed <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'affect-red'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> affectGreen <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'affect-green'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> affectBlue <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'affect-blue'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * This method sets the globalCompositeOperation to the value of the select
+       * field and it is bound to the precompose event of the layers.
+       *
+       * @param {ol.render.Event} evt The render event.
+       */</span>
+      <span class="token keyword">var</span> setBlendModeFromSelect <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        evt<span class="token punctuation">.</span>context<span class="token punctuation">.</span>globalCompositeOperation <span class="token operator">=</span> select<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * This method resets the globalCompositeOperation to the default value of
+       * 'source-over' and it is bound to the postcompose event of the layers.
+       *
+       * @param {ol.render.Event} evt The render event.
+       */</span>
+      <span class="token keyword">var</span> resetBlendModeFromSelect <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        evt<span class="token punctuation">.</span>context<span class="token punctuation">.</span>globalCompositeOperation <span class="token operator">=</span> <span class="token string">'source-over'</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Bind the pre- and postcompose handlers to the passed layer.
+       *
+       * @param {ol.layer.Vector} layer The layer to bind the handlers to.
+       */</span>
+      <span class="token keyword">var</span> bindLayerListeners <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>layer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        layer<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'precompose'</span><span class="token punctuation">,</span> setBlendModeFromSelect<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        layer<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'postcompose'</span><span class="token punctuation">,</span> resetBlendModeFromSelect<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Unind the pre- and postcompose handlers to the passed layers.
+       *
+       * @param {ol.layer.Vector} layer The layer to unbind the handlers from.
+       */</span>
+      <span class="token keyword">var</span> unbindLayerListeners <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>layer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        layer<span class="token punctuation">.</span><span class="token function">un</span><span class="token punctuation">(</span><span class="token string">'precompose'</span><span class="token punctuation">,</span> setBlendModeFromSelect<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        layer<span class="token punctuation">.</span><span class="token function">un</span><span class="token punctuation">(</span><span class="token string">'postcompose'</span><span class="token punctuation">,</span> resetBlendModeFromSelect<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/**
+       * Handler for the click event of the 'affect-XXX' checkboxes.
+       *
+       * @this {HTMLInputElement}
+       */</span>
+      <span class="token keyword">var</span> affectLayerClicked <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> layer<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">==</span> <span class="token string">'affect-red'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          layer <span class="token operator">=</span> redLayer<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">==</span> <span class="token string">'affect-green'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          layer <span class="token operator">=</span> greenLayer<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          layer <span class="token operator">=</span> blueLayer<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>checked<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">bindLayerListeners</span><span class="token punctuation">(</span>layer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token function">unbindLayerListeners</span><span class="token punctuation">(</span>layer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        map<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">// Rerender map when blend mode changes</span>
+      select<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        map<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// Unbind / bind listeners depending on the checked state when the checkboxes</span>
+      <span class="token comment" spellcheck="true">// are clicked</span>
+      affectRed<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> affectLayerClicked<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      affectGreen<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> affectLayerClicked<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      affectBlue<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> affectLayerClicked<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// Initially bind listeners</span>
+      <span class="token function">bindLayerListeners</span><span class="token punctuation">(</span>redLayer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">bindLayerListeners</span><span class="token punctuation">(</span>greenLayer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">bindLayerListeners</span><span class="token punctuation">(</span>blueLayer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./混合模式_files/common.js.下载"></script>
+    <script src="./混合模式_files/prism.min.js.下载"></script>
+    <script src="./混合模式_files/loader.js.下载"></script><script type="text/javascript" src="./混合模式_files/ol.js.下载"></script><script type="text/javascript" src="./混合模式_files/blend-modes.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./混合模式_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

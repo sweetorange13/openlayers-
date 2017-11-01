@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)http://openlayers.org/en/latest/examples/wms-custom-proj.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./定制平铺WMS_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./定制平铺WMS_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./定制平铺WMS_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./定制平铺WMS_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./定制平铺WMS_files/layout.css" type="text/css">
+    
+    
+    <script src="./定制平铺WMS_files/polyfill.min.js.下载"></script>
+    <script src="./定制平铺WMS_files/ZeroClipboard.min.js.下载"></script>
+    <title>定制平铺WMS</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./定制平铺WMS_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./定制平铺WMS_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/wms-custom-proj.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">定制平铺WMS</font></font></h4>
+          <div id="map" class="map"><div class="ol-viewport" data-view="10" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">© </font></font><a href="http://www.geo.admin.ch/internet/geoportal/en/home.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Pixelmap 1：1000000 / geo.admin.ch</font></font></a></li><li>© <a href="http://www.geo.admin.ch/internet/geoportal/en/home.html">National parks / geo.admin.ch</a></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div><div class="ol-scale-line ol-unselectable"><div class="ol-scale-line-inner" style="width: 146px;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">50公里</font></font></div></div></div></div></div>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc">Example of using custom coordinate transform functions.</p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用</font></font><code>ol.proj.addCoordinateTransforms()</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">自定义坐标变换功能可以添加到配置的投影。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.control.html" title="ol.control的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.control</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.control.ScaleLine.html" title="ol.control.ScaleLine的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.control.ScaleLine</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html" title="ol.layer.Tile的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Tile</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.proj.html" title="ol.proj的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.proj</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.proj.Projection.html" title="ol.proj.Projection的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.proj.Projection</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.TileWMS.html" title="ol.source.TileWMS的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.TileWMS</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Custom Tiled WMS</textarea>
+          <textarea class="hidden" name="description">Example of using custom coordinate transform functions.</textarea>
+          <textarea class="hidden" name="js">// By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.
+// So we create a projection instance for EPSG:21781 and pass it to
+// ol.proj.addProjection to make it available to the library for lookup by its
+// code.
+
+var projection = new ol.proj.Projection({
+  code: 'EPSG:21781',
+  // The extent is used to determine zoom level 0. Recommended values for a
+  // projection's validity extent can be found at https://epsg.io/.
+  extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
+  units: 'm'
+});
+ol.proj.addProjection(projection);
+
+// We also declare EPSG:21781/EPSG:4326 transform functions. These functions
+// are necessary for the ScaleLine control and when calling ol.proj.transform
+// for setting the view's initial center (see below).
+
+ol.proj.addCoordinateTransforms('EPSG:4326', projection,
+    function(coordinate) {
+      return [
+        WGStoCHy(coordinate[1], coordinate[0]),
+        WGStoCHx(coordinate[1], coordinate[0])
+      ];
+    },
+    function(coordinate) {
+      return [
+        CHtoWGSlng(coordinate[0], coordinate[1]),
+        CHtoWGSlat(coordinate[0], coordinate[1])
+      ];
+    });
+
+var extent = [420000, 30000, 900000, 350000];
+var layers = [
+  new ol.layer.Tile({
+    extent: extent,
+    source: new ol.source.TileWMS({
+      url: 'https://wms.geo.admin.ch/',
+      crossOrigin: 'anonymous',
+      attributions: '© &lt;a href="http://www.geo.admin.ch/internet/geoportal/' +
+          'en/home.html"&gt;Pixelmap 1:1000000 / geo.admin.ch&lt;/a&gt;',
+      params: {
+        'LAYERS': 'ch.swisstopo.pixelkarte-farbe-pk1000.noscale',
+        'FORMAT': 'image/jpeg'
+      },
+      serverType: 'mapserver'
+    })
+  }),
+  new ol.layer.Tile({
+    extent: extent,
+    source: new ol.source.TileWMS({
+      url: 'https://wms.geo.admin.ch/',
+      crossOrigin: 'anonymous',
+      attributions: '© &lt;a href="http://www.geo.admin.ch/internet/geoportal/' +
+          'en/home.html"&gt;National parks / geo.admin.ch&lt;/a&gt;',
+      params: {'LAYERS': 'ch.bafu.schutzgebiete-paerke_nationaler_bedeutung'},
+      serverType: 'mapserver'
+    })
+  })
+];
+
+var map = new ol.Map({
+  controls: ol.control.defaults().extend([
+    new ol.control.ScaleLine({
+      units: 'metric'
+    })
+  ]),
+  layers: layers,
+  target: 'map',
+  view: new ol.View({
+    projection: projection,
+    center: ol.proj.transform([8.23, 46.86], 'EPSG:4326', 'EPSG:21781'),
+    extent: extent,
+    zoom: 2
+  })
+});
+
+
+/*
+ * Swiss projection transform functions downloaded from
+ * http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html
+ */
+
+// Convert WGS lat/long (° dec) to CH y
+function WGStoCHy(lat, lng) {
+
+  // Converts degrees dec to sex
+  lat = DECtoSEX(lat);
+  lng = DECtoSEX(lng);
+
+  // Converts degrees to seconds (sex)
+  lat = DEGtoSEC(lat);
+  lng = DEGtoSEC(lng);
+
+  // Axiliary values (% Bern)
+  var lat_aux = (lat - 169028.66) / 10000;
+  var lng_aux = (lng - 26782.5) / 10000;
+
+  // Process Y
+  var y = 600072.37 +
+      211455.93 * lng_aux -
+      10938.51 * lng_aux * lat_aux -
+      0.36 * lng_aux * Math.pow(lat_aux, 2) -
+      44.54 * Math.pow(lng_aux, 3);
+
+  return y;
+}
+
+// Convert WGS lat/long (° dec) to CH x
+function WGStoCHx(lat, lng) {
+
+  // Converts degrees dec to sex
+  lat = DECtoSEX(lat);
+  lng = DECtoSEX(lng);
+
+  // Converts degrees to seconds (sex)
+  lat = DEGtoSEC(lat);
+  lng = DEGtoSEC(lng);
+
+  // Axiliary values (% Bern)
+  var lat_aux = (lat - 169028.66) / 10000;
+  var lng_aux = (lng - 26782.5) / 10000;
+
+  // Process X
+  var x = 200147.07 +
+      308807.95 * lat_aux +
+      3745.25 * Math.pow(lng_aux, 2) +
+      76.63 * Math.pow(lat_aux, 2) -
+      194.56 * Math.pow(lng_aux, 2) * lat_aux +
+      119.79 * Math.pow(lat_aux, 3);
+
+  return x;
+
+}
+
+
+// Convert CH y/x to WGS lat
+function CHtoWGSlat(y, x) {
+
+  // Converts militar to civil and  to unit = 1000km
+  // Axiliary values (% Bern)
+  var y_aux = (y - 600000) / 1000000;
+  var x_aux = (x - 200000) / 1000000;
+
+  // Process lat
+  var lat = 16.9023892 +
+      3.238272 * x_aux -
+      0.270978 * Math.pow(y_aux, 2) -
+      0.002528 * Math.pow(x_aux, 2) -
+      0.0447 * Math.pow(y_aux, 2) * x_aux -
+      0.0140 * Math.pow(x_aux, 3);
+
+  // Unit 10000" to 1 " and converts seconds to degrees (dec)
+  lat = lat * 100 / 36;
+
+  return lat;
+
+}
+
+// Convert CH y/x to WGS long
+function CHtoWGSlng(y, x) {
+
+  // Converts militar to civil and  to unit = 1000km
+  // Axiliary values (% Bern)
+  var y_aux = (y - 600000) / 1000000;
+  var x_aux = (x - 200000) / 1000000;
+
+  // Process long
+  var lng = 2.6779094 +
+      4.728982 * y_aux +
+      0.791484 * y_aux * x_aux +
+      0.1306 * y_aux * Math.pow(x_aux, 2) -
+      0.0436 * Math.pow(y_aux, 3);
+
+  // Unit 10000" to 1 " and converts seconds to degrees (dec)
+  lng = lng * 100 / 36;
+
+  return lng;
+
+}
+
+
+// Convert DEC angle to SEX DMS
+function DECtoSEX(angle) {
+
+  // Extract DMS
+  var deg = parseInt(angle, 10);
+  var min = parseInt((angle - deg) * 60, 10);
+  var sec = (((angle - deg) * 60) - min) * 60;
+
+  // Result in degrees sex (dd.mmss)
+  return deg + min / 100 + sec / 10000;
+
+}
+
+// Convert Degrees angle to seconds
+function DEGtoSEC(angle) {
+
+  // Extract DMS
+  var deg = parseInt(angle, 10);
+  var min = parseInt((angle - deg) * 100, 10);
+  var sec = (((angle - deg) * 100) - min) * 100;
+
+  // Avoid rounding problems with seconds=0
+  var parts = String(angle).split('.');
+  if (parts.length == 2 &amp;&amp; parts[1].length == 2) {
+    min = Number(parts[1]);
+    sec = 0;
+  }
+
+  // Result in degrees sex (dd.mmss)
+  return sec + min * 60 + deg * 3600;
+
+}
+</textarea>
+          <textarea class="hidden" name="css"></textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Custom Tiled WMS<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment" spellcheck="true">// By default OpenLayers does not know about the EPSG:21781 (Swiss) projection.</span>
+      <span class="token comment" spellcheck="true">// So we create a projection instance for EPSG:21781 and pass it to</span>
+      <span class="token comment" spellcheck="true">// ol.proj.addProjection to make it available to the library for lookup by its</span>
+      <span class="token comment" spellcheck="true">// code.</span>
+
+      <span class="token keyword">var</span> projection <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>proj<span class="token punctuation">.</span>Projection</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        code<span class="token punctuation">:</span> <span class="token string">'EPSG:21781'</span><span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// The extent is used to determine zoom level 0. Recommended values for a</span>
+        <span class="token comment" spellcheck="true">// projection's validity extent can be found at https://epsg.io/.</span>
+        extent<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">485869.5728</span><span class="token punctuation">,</span> <span class="token number">76443.1884</span><span class="token punctuation">,</span> <span class="token number">837076.5648</span><span class="token punctuation">,</span> <span class="token number">299941.7864</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        units<span class="token punctuation">:</span> <span class="token string">'m'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ol<span class="token punctuation">.</span>proj<span class="token punctuation">.</span><span class="token function">addProjection</span><span class="token punctuation">(</span>projection<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">// We also declare EPSG:21781/EPSG:4326 transform functions. These functions</span>
+      <span class="token comment" spellcheck="true">// are necessary for the ScaleLine control and when calling ol.proj.transform</span>
+      <span class="token comment" spellcheck="true">// for setting the view's initial center (see below).</span>
+
+      ol<span class="token punctuation">.</span>proj<span class="token punctuation">.</span><span class="token function">addCoordinateTransforms</span><span class="token punctuation">(</span><span class="token string">'EPSG:4326'</span><span class="token punctuation">,</span> projection<span class="token punctuation">,</span>
+          <span class="token keyword">function</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span>
+              <span class="token function">WGStoCHy</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> coordinate<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token function">WGStoCHx</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> coordinate<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          <span class="token keyword">function</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token punctuation">[</span>
+              <span class="token function">CHtoWGSlng</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> coordinate<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              <span class="token function">CHtoWGSlat</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> coordinate<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            <span class="token punctuation">]</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> extent <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">420000</span><span class="token punctuation">,</span> <span class="token number">30000</span><span class="token punctuation">,</span> <span class="token number">900000</span><span class="token punctuation">,</span> <span class="token number">350000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> layers <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          extent<span class="token punctuation">:</span> extent<span class="token punctuation">,</span>
+          source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>TileWMS</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            url<span class="token punctuation">:</span> <span class="token string">'https://wms.geo.admin.ch/'</span><span class="token punctuation">,</span>
+            crossOrigin<span class="token punctuation">:</span> <span class="token string">'anonymous'</span><span class="token punctuation">,</span>
+            attributions<span class="token punctuation">:</span> <span class="token string">'© &lt;a href="http://www.geo.admin.ch/internet/geoportal/'</span> <span class="token operator">+</span>
+                <span class="token string">'en/home.html"&gt;Pixelmap 1:1000000 / geo.admin.ch&lt;/a&gt;'</span><span class="token punctuation">,</span>
+            params<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+              <span class="token string">'LAYERS'</span><span class="token punctuation">:</span> <span class="token string">'ch.swisstopo.pixelkarte-farbe-pk1000.noscale'</span><span class="token punctuation">,</span>
+              <span class="token string">'FORMAT'</span><span class="token punctuation">:</span> <span class="token string">'image/jpeg'</span>
+            <span class="token punctuation">}</span><span class="token punctuation">,</span>
+            serverType<span class="token punctuation">:</span> <span class="token string">'mapserver'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          extent<span class="token punctuation">:</span> extent<span class="token punctuation">,</span>
+          source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>TileWMS</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            url<span class="token punctuation">:</span> <span class="token string">'https://wms.geo.admin.ch/'</span><span class="token punctuation">,</span>
+            crossOrigin<span class="token punctuation">:</span> <span class="token string">'anonymous'</span><span class="token punctuation">,</span>
+            attributions<span class="token punctuation">:</span> <span class="token string">'© &lt;a href="http://www.geo.admin.ch/internet/geoportal/'</span> <span class="token operator">+</span>
+                <span class="token string">'en/home.html"&gt;National parks / geo.admin.ch&lt;/a&gt;'</span><span class="token punctuation">,</span>
+            params<span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">'LAYERS'</span><span class="token punctuation">:</span> <span class="token string">'ch.bafu.schutzgebiete-paerke_nationaler_bedeutung'</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+            serverType<span class="token punctuation">:</span> <span class="token string">'mapserver'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        controls<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>control<span class="token punctuation">.</span><span class="token function">defaults</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+          <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>control<span class="token punctuation">.</span>ScaleLine</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            units<span class="token punctuation">:</span> <span class="token string">'metric'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        layers<span class="token punctuation">:</span> layers<span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> <span class="token string">'map'</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          projection<span class="token punctuation">:</span> projection<span class="token punctuation">,</span>
+          center<span class="token punctuation">:</span> ol<span class="token punctuation">.</span>proj<span class="token punctuation">.</span><span class="token function">transform</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">8.23</span><span class="token punctuation">,</span> <span class="token number">46.86</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">'EPSG:4326'</span><span class="token punctuation">,</span> <span class="token string">'EPSG:21781'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          extent<span class="token punctuation">:</span> extent<span class="token punctuation">,</span>
+          zoom<span class="token punctuation">:</span> <span class="token number">2</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+      <span class="token comment" spellcheck="true">/*
+       * Swiss projection transform functions downloaded from
+       * http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html
+       */</span>
+
+      <span class="token comment" spellcheck="true">// Convert WGS lat/long (° dec) to CH y</span>
+      <span class="token keyword">function</span> <span class="token function">WGStoCHy</span><span class="token punctuation">(</span>lat<span class="token punctuation">,</span> lng<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Converts degrees dec to sex</span>
+        lat <span class="token operator">=</span> <span class="token function">DECtoSEX</span><span class="token punctuation">(</span>lat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        lng <span class="token operator">=</span> <span class="token function">DECtoSEX</span><span class="token punctuation">(</span>lng<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Converts degrees to seconds (sex)</span>
+        lat <span class="token operator">=</span> <span class="token function">DEGtoSEC</span><span class="token punctuation">(</span>lat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        lng <span class="token operator">=</span> <span class="token function">DEGtoSEC</span><span class="token punctuation">(</span>lng<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Axiliary values (% Bern)</span>
+        <span class="token keyword">var</span> lat_aux <span class="token operator">=</span> <span class="token punctuation">(</span>lat <span class="token operator">-</span> <span class="token number">169028.66</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> lng_aux <span class="token operator">=</span> <span class="token punctuation">(</span>lng <span class="token operator">-</span> <span class="token number">26782.5</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Process Y</span>
+        <span class="token keyword">var</span> y <span class="token operator">=</span> <span class="token number">600072.37</span> <span class="token operator">+</span>
+            <span class="token number">211455.93</span> <span class="token operator">*</span> lng_aux <span class="token operator">-</span>
+            <span class="token number">10938.51</span> <span class="token operator">*</span> lng_aux <span class="token operator">*</span> lat_aux <span class="token operator">-</span>
+            <span class="token number">0.36</span> <span class="token operator">*</span> lng_aux <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lat_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span>
+            <span class="token number">44.54</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lng_aux<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> y<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment" spellcheck="true">// Convert WGS lat/long (° dec) to CH x</span>
+      <span class="token keyword">function</span> <span class="token function">WGStoCHx</span><span class="token punctuation">(</span>lat<span class="token punctuation">,</span> lng<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Converts degrees dec to sex</span>
+        lat <span class="token operator">=</span> <span class="token function">DECtoSEX</span><span class="token punctuation">(</span>lat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        lng <span class="token operator">=</span> <span class="token function">DECtoSEX</span><span class="token punctuation">(</span>lng<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Converts degrees to seconds (sex)</span>
+        lat <span class="token operator">=</span> <span class="token function">DEGtoSEC</span><span class="token punctuation">(</span>lat<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        lng <span class="token operator">=</span> <span class="token function">DEGtoSEC</span><span class="token punctuation">(</span>lng<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Axiliary values (% Bern)</span>
+        <span class="token keyword">var</span> lat_aux <span class="token operator">=</span> <span class="token punctuation">(</span>lat <span class="token operator">-</span> <span class="token number">169028.66</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> lng_aux <span class="token operator">=</span> <span class="token punctuation">(</span>lng <span class="token operator">-</span> <span class="token number">26782.5</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Process X</span>
+        <span class="token keyword">var</span> x <span class="token operator">=</span> <span class="token number">200147.07</span> <span class="token operator">+</span>
+            <span class="token number">308807.95</span> <span class="token operator">*</span> lat_aux <span class="token operator">+</span>
+            <span class="token number">3745.25</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lng_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span>
+            <span class="token number">76.63</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lat_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span>
+            <span class="token number">194.56</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lng_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> lat_aux <span class="token operator">+</span>
+            <span class="token number">119.79</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>lat_aux<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> x<span class="token punctuation">;</span>
+
+      <span class="token punctuation">}</span>
+
+
+      <span class="token comment" spellcheck="true">// Convert CH y/x to WGS lat</span>
+      <span class="token keyword">function</span> <span class="token function">CHtoWGSlat</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Converts militar to civil and  to unit = 1000km</span>
+        <span class="token comment" spellcheck="true">// Axiliary values (% Bern)</span>
+        <span class="token keyword">var</span> y_aux <span class="token operator">=</span> <span class="token punctuation">(</span>y <span class="token operator">-</span> <span class="token number">600000</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000000</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> x_aux <span class="token operator">=</span> <span class="token punctuation">(</span>x <span class="token operator">-</span> <span class="token number">200000</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000000</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Process lat</span>
+        <span class="token keyword">var</span> lat <span class="token operator">=</span> <span class="token number">16.9023892</span> <span class="token operator">+</span>
+            <span class="token number">3.238272</span> <span class="token operator">*</span> x_aux <span class="token operator">-</span>
+            <span class="token number">0.270978</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>y_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span>
+            <span class="token number">0.002528</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>x_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span>
+            <span class="token number">0.0447</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>y_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> x_aux <span class="token operator">-</span>
+            <span class="token number">0.0140</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>x_aux<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Unit 10000" to 1 " and converts seconds to degrees (dec)</span>
+        lat <span class="token operator">=</span> lat <span class="token operator">*</span> <span class="token number">100</span> <span class="token operator">/</span> <span class="token number">36</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> lat<span class="token punctuation">;</span>
+
+      <span class="token punctuation">}</span>
+
+      <span class="token comment" spellcheck="true">// Convert CH y/x to WGS long</span>
+      <span class="token keyword">function</span> <span class="token function">CHtoWGSlng</span><span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Converts militar to civil and  to unit = 1000km</span>
+        <span class="token comment" spellcheck="true">// Axiliary values (% Bern)</span>
+        <span class="token keyword">var</span> y_aux <span class="token operator">=</span> <span class="token punctuation">(</span>y <span class="token operator">-</span> <span class="token number">600000</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000000</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> x_aux <span class="token operator">=</span> <span class="token punctuation">(</span>x <span class="token operator">-</span> <span class="token number">200000</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">1000000</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Process long</span>
+        <span class="token keyword">var</span> lng <span class="token operator">=</span> <span class="token number">2.6779094</span> <span class="token operator">+</span>
+            <span class="token number">4.728982</span> <span class="token operator">*</span> y_aux <span class="token operator">+</span>
+            <span class="token number">0.791484</span> <span class="token operator">*</span> y_aux <span class="token operator">*</span> x_aux <span class="token operator">+</span>
+            <span class="token number">0.1306</span> <span class="token operator">*</span> y_aux <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>x_aux<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span>
+            <span class="token number">0.0436</span> <span class="token operator">*</span> Math<span class="token punctuation">.</span><span class="token function">pow</span><span class="token punctuation">(</span>y_aux<span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Unit 10000" to 1 " and converts seconds to degrees (dec)</span>
+        lng <span class="token operator">=</span> lng <span class="token operator">*</span> <span class="token number">100</span> <span class="token operator">/</span> <span class="token number">36</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">return</span> lng<span class="token punctuation">;</span>
+
+      <span class="token punctuation">}</span>
+
+
+      <span class="token comment" spellcheck="true">// Convert DEC angle to SEX DMS</span>
+      <span class="token keyword">function</span> <span class="token function">DECtoSEX</span><span class="token punctuation">(</span>angle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Extract DMS</span>
+        <span class="token keyword">var</span> deg <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>angle<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> min <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>angle <span class="token operator">-</span> deg<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> sec <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>angle <span class="token operator">-</span> deg<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span> <span class="token operator">-</span> min<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Result in degrees sex (dd.mmss)</span>
+        <span class="token keyword">return</span> deg <span class="token operator">+</span> min <span class="token operator">/</span> <span class="token number">100</span> <span class="token operator">+</span> sec <span class="token operator">/</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+
+      <span class="token punctuation">}</span>
+
+      <span class="token comment" spellcheck="true">// Convert Degrees angle to seconds</span>
+      <span class="token keyword">function</span> <span class="token function">DEGtoSEC</span><span class="token punctuation">(</span>angle<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+        <span class="token comment" spellcheck="true">// Extract DMS</span>
+        <span class="token keyword">var</span> deg <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>angle<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> min <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token punctuation">(</span>angle <span class="token operator">-</span> deg<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">var</span> sec <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>angle <span class="token operator">-</span> deg<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span> <span class="token operator">-</span> min<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// Avoid rounding problems with seconds=0</span>
+        <span class="token keyword">var</span> parts <span class="token operator">=</span> <span class="token function">String</span><span class="token punctuation">(</span>angle<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>parts<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">2</span> <span class="token operator">&amp;&amp;</span> parts<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          min <span class="token operator">=</span> <span class="token function">Number</span><span class="token punctuation">(</span>parts<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          sec <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment" spellcheck="true">// Result in degrees sex (dd.mmss)</span>
+        <span class="token keyword">return</span> sec <span class="token operator">+</span> min <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">+</span> deg <span class="token operator">*</span> <span class="token number">3600</span><span class="token punctuation">;</span>
+
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./定制平铺WMS_files/common.js.下载"></script>
+    <script src="./定制平铺WMS_files/prism.min.js.下载"></script>
+    <script src="./定制平铺WMS_files/loader.js.下载"></script><script type="text/javascript" src="./定制平铺WMS_files/ol.js.下载"></script><script type="text/javascript" src="./定制平铺WMS_files/wms-custom-proj.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./定制平铺WMS_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos goog-te-spinner-pos-show"><div class="goog-te-spinner-animation goog-te-spinner-animation-show"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)http://openlayers.org/en/latest/examples/wmts-capabilities.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./WMTS功能解析_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./WMTS功能解析_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./WMTS功能解析_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./WMTS功能解析_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./WMTS功能解析_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./WMTS功能解析_files/wmts-capabilities.css">
+    <script src="./WMTS功能解析_files/polyfill.min.js.下载"></script>
+    <script src="./WMTS功能解析_files/ZeroClipboard.min.js.下载"></script>
+    <title>WMTS功能解析</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./WMTS功能解析_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./WMTS功能解析_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/wmts-capabilities.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">WMTS功能解析</font></font></h4>
+          <pre class="log-container"><code id="log">{<font></font>
+  "ServiceIdentification": {<font></font>
+    "Title": "Koordinates Labs",<font></font>
+    "ServiceType": "OGC WMTS",<font></font>
+    "ServiceTypeVersion": "1.0.0"<font></font>
+  },<font></font>
+  "ServiceProvider": {<font></font>
+    "ProviderName": "Koordinates",<font></font>
+    "ProviderSite": "http://labs.koordinates.com",<font></font>
+    "ServiceContact": {}<font></font>
+  },<font></font>
+  "OperationsMetadata": {<font></font>
+    "GetCapabilities": {<font></font>
+      "DCP": {<font></font>
+        "HTTP": {<font></font>
+          "Get": [<font></font>
+            {<font></font>
+              "href": "https://labs.koordinates.com/services;key=d740ea02e0c44cafb70dce31a774ca10/wmts/1.0.0/layer/7328/WMTSCapabilities.xml?",<font></font>
+              "Constraint": [<font></font>
+                {<font></font>
+                  "name": "GetEncoding",<font></font>
+                  "AllowedValues": {<font></font>
+                    "Value": [<font></font>
+                      "KVP"<font></font>
+                    ]<font></font>
+                  }<font></font>
+                }<font></font>
+              ]<font></font>
+            }<font></font>
+          ]<font></font>
+        }<font></font>
+      }<font></font>
+    },<font></font>
+    "GetFeatureInfo": {<font></font>
+      "DCP": {<font></font>
+        "HTTP": {<font></font>
+          "Get": [<font></font>
+            {<font></font>
+              "href": "https://labs.koordinates.com/services;key=d740ea02e0c44cafb70dce31a774ca10/wmts/?",<font></font>
+              "Constraint": [<font></font>
+                {<font></font>
+                  "name": "GetEncoding",<font></font>
+                  "AllowedValues": {<font></font>
+                    "Value": [<font></font>
+                      "KVP"<font></font>
+                    ]<font></font>
+                  }<font></font>
+                }<font></font>
+              ]<font></font>
+            }<font></font>
+          ]<font></font>
+        }<font></font>
+      }<font></font>
+    }<font></font>
+  },<font></font>
+  "version": "1.0.0",<font></font>
+  "Contents": {<font></font>
+    "Layer": [<font></font>
+      {<font></font>
+        "Title": "New Zealand Earthquakes",<font></font>
+        "Abstract": "Historical earthquake data, accessed via the [GeoNet WFS feed](http://info.geonet.org.nz/display/appdata/Advanced+Queries). The data has been filtered to only include quakes in proximity to New Zealand with an `eventtype` of \"Earthquake\" or \"none\" per the [GeoNet catalogue](http://info.geonet.org.nz/display/appdata/Catalogue+Output). Most fields have been removed. Please also note the excluded data per this [GeoNet page](http://info.geonet.org.nz/display/appdata/The+Gap). We acknowledge the New Zealand GeoNet project and its sponsors EQC, GNS Science and LINZ, for providing data used in this layer.",<font></font>
+        "Identifier": "layer-7328",<font></font>
+        "WGS84BoundingBox": [<font></font>
+          -180,<font></font>
+          -49.454297,<font></font>
+          180,<font></font>
+          -31.16<font></font>
+        ],<font></font>
+        "Style": [<font></font>
+          {<font></font>
+            "Title": "Weighted point styles",<font></font>
+            "Identifier": "style=39",<font></font>
+            "isDefault": true<font></font>
+          }<font></font>
+        ],<font></font>
+        "Format": [<font></font>
+          "image/png"<font></font>
+        ],<font></font>
+        "TileMatrixSetLink": [<font></font>
+          {<font></font>
+            "TileMatrixSet": "EPSG:3857"<font></font>
+          }<font></font>
+        ],<font></font>
+        "ResourceURL": [<font></font>
+          {<font></font>
+            "format": "image/png",<font></font>
+            "template": "https://koordinates-tiles-a.global.ssl.fastly.net/services;key=d740ea02e0c44cafb70dce31a774ca10/tiles/v4/layer=7328,{style}/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}.png",<font></font>
+            "resourceType": "tile"<font></font>
+          },<font></font>
+          {<font></font>
+            "format": "application/json",<font></font>
+            "template": "https://labs.koordinates.com/services;key=d740ea02e0c44cafb70dce31a774ca10/wmts/1.0.0/layer/7328/featureinfo/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}/{I}/{J}.json",<font></font>
+            "resourceType": "FeatureInfo"<font></font>
+          },<font></font>
+          {<font></font>
+            "format": "text/html",<font></font>
+            "template": "https://labs.koordinates.com/services;key=d740ea02e0c44cafb70dce31a774ca10/wmts/1.0.0/layer/7328/featureinfo/{TileMatrixSet}/{TileMatrix}/{TileCol}/{TileRow}/{I}/{J}.html",<font></font>
+            "resourceType": "FeatureInfo"<font></font>
+          }<font></font>
+        ]<font></font>
+      }<font></font>
+    ],<font></font>
+    "TileMatrixSet": [<font></font>
+      {<font></font>
+        "Identifier": "EPSG:3857",<font></font>
+        "SupportedCRS": "urn:ogc:def:crs:EPSG::3857",<font></font>
+        "WellKnownScaleSet": "urn:ogc:def:wkss:OGC:1.0:GoogleMapsCompatible",<font></font>
+        "TileMatrix": [<font></font>
+          {<font></font>
+            "Identifier": "0",<font></font>
+            "ScaleDenominator": 559082264.029,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 1,<font></font>
+            "MatrixHeight": 1<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "1",<font></font>
+            "ScaleDenominator": 279541132.014,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 2,<font></font>
+            "MatrixHeight": 2<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "2",<font></font>
+            "ScaleDenominator": 139770566.007,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 4,<font></font>
+            "MatrixHeight": 4<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "3",<font></font>
+            "ScaleDenominator": 69885283.0036,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 8,<font></font>
+            "MatrixHeight": 8<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "4",<font></font>
+            "ScaleDenominator": 34942641.5018,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 16,<font></font>
+            "MatrixHeight": 16<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "5",<font></font>
+            "ScaleDenominator": 17471320.7509,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 32,<font></font>
+            "MatrixHeight": 32<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "6",<font></font>
+            "ScaleDenominator": 8735660.37545,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 64,<font></font>
+            "MatrixHeight": 64<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "7",<font></font>
+            "ScaleDenominator": 4367830.18772,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 128,<font></font>
+            "MatrixHeight": 128<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "8",<font></font>
+            "ScaleDenominator": 2183915.09386,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 256,<font></font>
+            "MatrixHeight": 256<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "9",<font></font>
+            "ScaleDenominator": 1091957.54693,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 512,<font></font>
+            "MatrixHeight": 512<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "10",<font></font>
+            "ScaleDenominator": 545978.773466,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 1024,<font></font>
+            "MatrixHeight": 1024<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "11",<font></font>
+            "ScaleDenominator": 272989.386733,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 2048,<font></font>
+            "MatrixHeight": 2048<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "12",<font></font>
+            "ScaleDenominator": 136494.693366,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 4096,<font></font>
+            "MatrixHeight": 4096<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "13",<font></font>
+            "ScaleDenominator": 68247.3466832,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 8192,<font></font>
+            "MatrixHeight": 8192<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "14",<font></font>
+            "ScaleDenominator": 34123.6733416,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 16384,<font></font>
+            "MatrixHeight": 16384<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "15",<font></font>
+            "ScaleDenominator": 17061.8366708,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 32768,<font></font>
+            "MatrixHeight": 32768<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "16",<font></font>
+            "ScaleDenominator": 8530.9183354,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 65536,<font></font>
+            "MatrixHeight": 65536<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "17",<font></font>
+            "ScaleDenominator": 4265.4591677,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 131072,<font></font>
+            "MatrixHeight": 131072<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "18",<font></font>
+            "ScaleDenominator": 2132.72958385,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 262144,<font></font>
+            "MatrixHeight": 262144<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "19",<font></font>
+            "ScaleDenominator": 1066.36479192,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 524288,<font></font>
+            "MatrixHeight": 524288<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "20",<font></font>
+            "ScaleDenominator": 533.182395962,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 1048576,<font></font>
+            "MatrixHeight": 1048576<font></font>
+          },<font></font>
+          {<font></font>
+            "Identifier": "21",<font></font>
+            "ScaleDenominator": 266.591197981,<font></font>
+            "TopLeftCorner": [<font></font>
+              -20037508.3428,<font></font>
+              20037508.3428<font></font>
+            ],<font></font>
+            "TileWidth": 256,<font></font>
+            "TileHeight": 256,<font></font>
+            "MatrixWidth": 2097152,<font></font>
+            "MatrixHeight": 2097152<font></font>
+          }<font></font>
+        ]<font></font>
+      }<font></font>
+    ]<font></font>
+  }<font></font>
+}</code></pre>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">解析WMTS GetCapabilities响应的示例。</font></font></p>
+          <div id="docs"><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">本示例通过解析WMTS功能响应来显示结果对象的内容。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.format.WMTSCapabilities.html" title="ol.format.MMTSCapabilities的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.format.WMTSCapabilities</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">WMTS Capabilities Parsing</textarea>
+          <textarea class="hidden" name="description">Example of parsing a WMTS GetCapabilities response.</textarea>
+          <textarea class="hidden" name="js">var parser = new ol.format.WMTSCapabilities();
+
+fetch('https://openlayers.org/en/v4.4.2/examples/data/WMTSCapabilities.xml').then(function(response) {
+  return response.text();
+}).then(function(text) {
+  var result = parser.read(text);
+  document.getElementById('log').innerText = JSON.stringify(result, null, 2);
+});
+</textarea>
+          <textarea class="hidden" name="css">.log-container {
+  height: 400px;
+  overflow: scroll;
+}
+</textarea>
+          <textarea class="hidden" name="html">&lt;pre class="log-container"&gt;&lt;code id="log"&gt;&lt;/code&gt;&lt;/pre&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>WMTS Capabilities Parsing<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">.log-container </span><span class="token punctuation">{</span>
+        <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+        <span class="token property">overflow</span><span class="token punctuation">:</span> scroll<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>pre</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>log-container<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>log<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>pre</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> parser <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>format<span class="token punctuation">.</span>WMTSCapabilities</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token string">'https://openlayers.org/en/v4.4.2/examples/data/WMTSCapabilities.xml'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> response<span class="token punctuation">.</span><span class="token function">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> result <span class="token operator">=</span> parser<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'log'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerText <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>result<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./WMTS功能解析_files/common.js.下载"></script>
+    <script src="./WMTS功能解析_files/prism.min.js.下载"></script>
+    <script src="./WMTS功能解析_files/loader.js.下载"></script><script type="text/javascript" src="./WMTS功能解析_files/ol.js.下载"></script><script type="text/javascript" src="./WMTS功能解析_files/wmts-capabilities.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./WMTS功能解析_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)http://openlayers.org/en/latest/examples/tileutfgrid.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./平铺UTFGrid_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./平铺UTFGrid_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./平铺UTFGrid_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./平铺UTFGrid_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./平铺UTFGrid_files/layout.css" type="text/css">
+    
+    <link rel="stylesheet" href="./平铺UTFGrid_files/tileutfgrid.css">
+    <script src="./平铺UTFGrid_files/polyfill.min.js.下载"></script>
+    <script src="./平铺UTFGrid_files/ZeroClipboard.min.js.下载"></script>
+    <title>平铺UTFGrid</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./平铺UTFGrid_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./平铺UTFGrid_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/tileutfgrid.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">平铺UTFGrid</font></font></h4>
+          <div id="map" class="map" style="cursor: pointer;"><div class="ol-viewport" data-view="5" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"><div class="ol-overlay-container ol-selectable" style="position: absolute; left: 1183px; top: 400px;"><div id="country-info">
+    <div id="country-name">Antarctica</div>
+    <img id="country-flag" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABDEAIAAAC1uevOAAAACXBIWXMAAABIAAAASABGyWs+AAAABmJLR0T///////8JWPfcAAAEhElEQVR42u2dO2gUURSGL0IgtmohRLCxELQQ7FIYsNDCUmwEwS4iWClaKabQQsEmWARrC5sIBgRREJuA76AYUFSUoIJETKKIRCQWX3Ng3GV2d+bOuXf+5rDMbmbD3W/O4z/3EUZ3nD357JGsbH92z/L5qeerxeuhqS/2fGfZwW3QEMgKLFmBJSuwNBCyAitGqXHw+JUtrzZoNARWZXZ89dr0m133hl5u+76Z14eXJjfOL4Pa2N+JA3Nj9vPFK7IDgZVHqQ8uN4Zmp74eubDv5rqPZx7efrtz5dzak7X3ayuLh34M/RnBLqxfXPj9eG73h1M/R2buP53+NozlytXZO18+TQqynsHKTzE6PXp907u7YAQ6wNSf5Q6XJ2a2Lgzj4QRW60IhfsV6pmrt6xOfL/06Rhjdf+vi0RfbQQ2U25O9tQgsG/jqQKrow4CMMMr1B3vnp5bGgUxgZZKS2x+4Wct/krf3CjnJBJ3eJfvxgJS1pPwUDfhRPBkBVGAlYPnxvIFlq86iPwO1qrxaHeVX93uGNuRViALewCpfCljfloo/C3F+2mZlhRSR6mTxZK0Gi8IeIbGpOig/sBBK/IuxNYKF02YgcOnxvVcccSE+WFXlTPVJ3yFO341BwXvFwQusATonsMgXW+2xAKhYkVH1kJDW1wAB68HbNd4so+e/cRQpee/kORimOjIwwM0JqaIG5kcpLH4yktxQRqIkH7JdtkGQys9XWUuC4XlyQIiT3OG3wKtM3kMmAWRl7mwbvfU1mL3pW56bQiFOHWEnypUXLQmU4MX3WoDwTAxx3v6pk/XczG5AeSfMlc+BwIt5Ae0EqFM7yHMK3wBY+WlLCoUuwLIChDzQIB5LYP0nSyM/IH8izAmXnDqGLmY3AJm8V6/6O77fp98Kfia3MEz5NWHiQIbvZyQ9TK1xNx/L9hZle826uncyYgqqjsCieJbHGhyvMsJyK8DCdctXVWXpcAiszBvGedSMvYZRF2D5XOyQrk0+FFaVDOY3gVitnuAhYZfHym8pbMNgqW9Yt7LVUrBsEJTynpPo4KilQ20o0aGqlTwExKbCojvlXTJpHi3q4G2DNbv4QsExE7A8LHq005cVFvtDSlVhBWt7ZO2c0vrmNSSpvEs4zaPxLLCktrcbLJ5CdnwQQN0t3Qs/OyomsPGaFSBUJ8bcpiDzrSJtnYiVD+MBowb0ubowya0iqX14Rhnc8oIqz3en/T/T2rvB23YgGe5BiiejKQRqSBW8xvKu3euBHA5Ai8v2O7VKPHQFtPwrYUxJhwm7VnhsdpIPHrfXVD1+TyXorOX+sGvqOAKmxPjfO1keq+eHis/EbDfZM8ZSOQQq0tTknLwgVWrMveMJxzqZQqGwFrDSOgpFYLle/8h3pXi6jsByt0zNnqWT7gF0AsvFvFakWvK2PE4zFFg9JOzgRcZTVPC76/i8y9+yHxiY2qMxczpVWmD1mWlZBd/q+IQwciMw4rXdZtwe6ZvrcZgCq3Y9LF0/NIhIFPwoT1L8cxrJoCHW/ymwZJN5AIKeM9k67D/5FMR6T3YJsAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxMS0wOS0wMlQyMzoyOToyMy0wNDowMOaZ0HMAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTEtMDItMjhUMTk6MTg6MzYtMDU6MDALjN+WAAAAUnRFWHRzdmc6YmFzZS11cmkAZmlsZTovLy9ob21lL2FqL0NvZGUvdG0tbWFzdGVyL2V4YW1wbGVzL2dlb2dyYXBoeS1jbGFzcy9mbGFncy9BVEEuc3ZntCZHjQAAAABJRU5ErkJggg==">
+  </div></div></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li><li></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+<div style="display: none;">
+  <!-- Overlay with the country info -->
+  
+</div>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">此示例显示如何从TileUTFGrid图层读取数据。</font></font></p>
+          <div id="docs"><p></p><p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">指向一个国家看它的名字和旗帜。</font></font></p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">用</font></font><a href="http://tilemill.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">TileMill</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">制作的瓷砖</font><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">托管在MapBox.com或开源的</font></font><a href="https://github.com/klokantech/tileserver-php/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">TileServer上</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font><p></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.Overlay.html" title="ol.Overlay的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Overlay</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html" title="ol.layer.Tile的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Tile</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.TileJSON.html" title="ol.source.TileJSON的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.TileJSON</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.TileUTFGrid.html" title="ol.source.TileUTFGrid的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.TileUTFGrid</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">Tiled UTFGrid</textarea>
+          <textarea class="hidden" name="description">This example shows how to read data from a TileUTFGrid layer.</textarea>
+          <textarea class="hidden" name="js">var key = 'Your Mapbox access token from http://mapbox.com/ here';
+
+var mapLayer = new ol.layer.Tile({
+  source: new ol.source.TileJSON({
+    url: 'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&amp;access_token=' + key
+  })
+});
+
+
+var gridSource = new ol.source.TileUTFGrid({
+  url: 'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&amp;access_token=' + key
+});
+
+var gridLayer = new ol.layer.Tile({source: gridSource});
+
+var view = new ol.View({
+  center: [0, 0],
+  zoom: 1
+});
+
+var mapElement = document.getElementById('map');
+var map = new ol.Map({
+  layers: [mapLayer, gridLayer],
+  target: mapElement,
+  view: view
+});
+
+var infoElement = document.getElementById('country-info');
+var flagElement = document.getElementById('country-flag');
+var nameElement = document.getElementById('country-name');
+
+var infoOverlay = new ol.Overlay({
+  element: infoElement,
+  offset: [15, 15],
+  stopEvent: false
+});
+map.addOverlay(infoOverlay);
+
+var displayCountryInfo = function(coordinate) {
+  var viewResolution = /** @type {number} */ (view.getResolution());
+  gridSource.forDataAtCoordinateAndResolution(coordinate, viewResolution,
+      function(data) {
+        // If you want to use the template from the TileJSON,
+        //  load the mustache.js library separately and call
+        //  info.innerHTML = Mustache.render(gridSource.getTemplate(), data);
+        mapElement.style.cursor = data ? 'pointer' : '';
+        if (data) {
+          flagElement.src = 'data:image/png;base64,' + data['flag_png'];
+          nameElement.innerHTML = data['admin'];
+        }
+        infoOverlay.setPosition(data ? coordinate : undefined);
+      });
+};
+
+map.on('pointermove', function(evt) {
+  if (evt.dragging) {
+    return;
+  }
+  var coordinate = map.getEventCoordinate(evt.originalEvent);
+  displayCountryInfo(coordinate);
+});
+
+map.on('click', function(evt) {
+  displayCountryInfo(evt.coordinate);
+});
+</textarea>
+          <textarea class="hidden" name="css">#country-name {
+  color: black;
+  font-size: 12pt;
+  font-weight: bold;
+  text-shadow: white 0.1em 0.1em 0.2em;
+}
+</textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+&lt;div style="display: none;"&gt;
+  &lt;!-- Overlay with the country info --&gt;
+  &lt;div id="country-info"&gt;
+    &lt;div id="country-name"&gt;&amp;nbsp;&lt;/div&gt;
+    &lt;img id="country-flag" src="" /&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>Tiled UTFGrid<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token style language-css"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span><span class="token punctuation">&gt;</span></span>
+      <span class="token selector">#country-name </span><span class="token punctuation">{</span>
+        <span class="token property">color</span><span class="token punctuation">:</span> black<span class="token punctuation">;</span>
+        <span class="token property">font-size</span><span class="token punctuation">:</span> 12pt<span class="token punctuation">;</span>
+        <span class="token property">font-weight</span><span class="token punctuation">:</span> bold<span class="token punctuation">;</span>
+        <span class="token property">text-shadow</span><span class="token punctuation">:</span> white 0.1em 0.1em 0.2em<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token style-attr language-css"><span class="token attr-name"> <span class="token attr-name">style</span></span><span class="token punctuation">="</span><span class="token attr-value"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token comment" spellcheck="true">&lt;!-- Overlay with the country info --&gt;</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>country-info<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>country-name<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token entity" title=" ">&amp;nbsp;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>country-flag<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> key <span class="token operator">=</span> <span class="token string">'Your Mapbox access token from http://mapbox.com/ here'</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> mapLayer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>TileJSON</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          url<span class="token punctuation">:</span> <span class="token string">'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&amp;access_token='</span> <span class="token operator">+</span> key
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+      <span class="token keyword">var</span> gridSource <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>TileUTFGrid</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        url<span class="token punctuation">:</span> <span class="token string">'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&amp;access_token='</span> <span class="token operator">+</span> key
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> gridLayer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>source<span class="token punctuation">:</span> gridSource<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> view <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        center<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        zoom<span class="token punctuation">:</span> <span class="token number">1</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> mapElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'map'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        layers<span class="token punctuation">:</span> <span class="token punctuation">[</span>mapLayer<span class="token punctuation">,</span> gridLayer<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> mapElement<span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> view
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> infoElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'country-info'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> flagElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'country-flag'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> nameElement <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'country-name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> infoOverlay <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Overlay</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        element<span class="token punctuation">:</span> infoElement<span class="token punctuation">,</span>
+        offset<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">15</span><span class="token punctuation">,</span> <span class="token number">15</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        stopEvent<span class="token punctuation">:</span> <span class="token keyword">false</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      map<span class="token punctuation">.</span><span class="token function">addOverlay</span><span class="token punctuation">(</span>infoOverlay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> displayCountryInfo <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> viewResolution <span class="token operator">=</span> <span class="token comment" spellcheck="true">/** @type {number} */</span> <span class="token punctuation">(</span>view<span class="token punctuation">.</span><span class="token function">getResolution</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        gridSource<span class="token punctuation">.</span><span class="token function">forDataAtCoordinateAndResolution</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">,</span> viewResolution<span class="token punctuation">,</span>
+            <span class="token keyword">function</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token comment" spellcheck="true">// If you want to use the template from the TileJSON,</span>
+              <span class="token comment" spellcheck="true">//  load the mustache.js library separately and call</span>
+              <span class="token comment" spellcheck="true">//  info.innerHTML = Mustache.render(gridSource.getTemplate(), data);</span>
+              mapElement<span class="token punctuation">.</span>style<span class="token punctuation">.</span>cursor <span class="token operator">=</span> data <span class="token operator">?</span> <span class="token string">'pointer'</span> <span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                flagElement<span class="token punctuation">.</span>src <span class="token operator">=</span> <span class="token string">'data:image/png;base64,'</span> <span class="token operator">+</span> data<span class="token punctuation">[</span><span class="token string">'flag_png'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                nameElement<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> data<span class="token punctuation">[</span><span class="token string">'admin'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+              <span class="token punctuation">}</span>
+              infoOverlay<span class="token punctuation">.</span><span class="token function">setPosition</span><span class="token punctuation">(</span>data <span class="token operator">?</span> coordinate <span class="token punctuation">:</span> undefined<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      map<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'pointermove'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>evt<span class="token punctuation">.</span>dragging<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">var</span> coordinate <span class="token operator">=</span> map<span class="token punctuation">.</span><span class="token function">getEventCoordinate</span><span class="token punctuation">(</span>evt<span class="token punctuation">.</span>originalEvent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">displayCountryInfo</span><span class="token punctuation">(</span>coordinate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      map<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">displayCountryInfo</span><span class="token punctuation">(</span>evt<span class="token punctuation">.</span>coordinate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./平铺UTFGrid_files/common.js.下载"></script>
+    <script src="./平铺UTFGrid_files/prism.min.js.下载"></script>
+    <script src="./平铺UTFGrid_files/loader.js.下载"></script><script type="text/javascript" src="./平铺UTFGrid_files/ol.js.下载"></script><script type="text/javascript" src="./平铺UTFGrid_files/tileutfgrid.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./平铺UTFGrid_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)http://openlayers.org/en/latest/examples/here-maps.html -->
+<html lang="en-US" class="translated-ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="./HERE Map Tile API_files/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="./HERE Map Tile API_files/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="./HERE Map Tile API_files/prism.css" type="text/css">
+    <link rel="stylesheet" href="./HERE Map Tile API_files/ol.css" type="text/css">
+    <link rel="stylesheet" href="./HERE Map Tile API_files/layout.css" type="text/css">
+    
+    
+    <script src="./HERE Map Tile API_files/polyfill.min.js.下载"></script>
+    <script src="./HERE Map Tile API_files/ZeroClipboard.min.js.下载"></script>
+    <title>HERE Map Tile API</title>
+  <link type="text/css" rel="stylesheet" charset="UTF-8" href="./HERE Map Tile API_files/translateelement.css"></head>
+  <body>
+
+    <header class="navbar" role="navigation">
+      <div class="container">
+        <div class="display-table pull-left" id="navbar-logo-container">
+          <a class="navbar-brand" href="http://openlayers.org/en/latest/examples/"><img src="./HERE Map Tile API_files/logo-70x70.png"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">&nbsp;OpenLayers示例</font></font></a>
+        <form class="navbar-form version-form"><select class="input-medium"><option value="raw"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">发展</font></font></option><option value="advanced"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">生产</font></font></option></select></form></div>
+        <!-- menu items that get hidden below 768px width -->
+        <nav class="collapse navbar-collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav pull-right">
+            <li><a href="http://openlayers.org/en/latest/doc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">文件</font></font></a></li>
+            <li><a class="active" href="http://openlayers.org/en/latest/examples/index.html"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">例子</font></font></a></li>
+            <li><a href="http://openlayers.org/en/latest/apidoc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">API</font></font></a></li>
+            <li><a href="https://github.com/openlayers/openlayers"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">码</font></font></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container-fluid">
+
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">×</font></font></span></button><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">
+        本示例使用OpenLayers v </font></font><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font><font style="vertical-align: inherit;">在</font></font><a id="latest-link" href="http://openlayers.org/en/latest/examples/here-maps.html#" class="alert-link"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">最新的</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">为v </font></font><span id="latest-version"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4.4.2</font></font></span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。
+      </font></font></div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <h4 id="title"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE Map Tile API</font></font></h4>
+          <div id="map" class="map"><div class="ol-viewport" data-view="13" style="position: relative; overflow: hidden; width: 100%; height: 100%; touch-action: none;"><canvas class="ol-unselectable" width="1873" height="400" style="width: 100%; height: 100%; display: block;"></canvas><div class="ol-overlaycontainer"></div><div class="ol-overlaycontainer-stopevent"><div class="ol-zoom ol-unselectable ol-control"><button class="ol-zoom-in" type="button" title="放大"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">+</font></font></button><button class="ol-zoom-out" type="button" title="缩小"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> - </font></font></button></div><div class="ol-rotate ol-unselectable ol-control ol-hidden"><button class="ol-rotate-reset" type="button" title="复位旋转"><span class="ol-compass" style="transform: rotate(0rad);"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">⇧</font></font></span></button></div><div class="ol-attribution ol-unselectable ol-control ol-collapsed"><ul><li style=""><a href="https://openlayers.org/"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAAAHGAAABxgEXwfpGAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAhNQTFRF////AP//AICAgP//AFVVQECA////K1VVSbbbYL/fJ05idsTYJFtbbcjbJllmZszWWMTOIFhoHlNiZszTa9DdUcHNHlNlV8XRIVdiasrUHlZjIVZjaMnVH1RlIFRkH1RkH1ZlasvYasvXVsPQH1VkacnVa8vWIVZjIFRjVMPQa8rXIVVkXsXRsNveIFVkIFZlIVVj3eDeh6GmbMvXH1ZkIFRka8rWbMvXIFVkIFVjIFVkbMvWH1VjbMvWIFVlbcvWIFVla8vVIFVkbMvWbMvVH1VkbMvWIFVlbcvWIFVkbcvVbMvWjNPbIFVkU8LPwMzNIFVkbczWIFVkbsvWbMvXIFVkRnB8bcvW2+TkW8XRIFVkIlZlJVloJlpoKlxrLl9tMmJwOWd0Omh1RXF8TneCT3iDUHiDU8LPVMLPVcLPVcPQVsPPVsPQV8PQWMTQWsTQW8TQXMXSXsXRX4SNX8bSYMfTYcfTYsfTY8jUZcfSZsnUaIqTacrVasrVa8jTa8rWbI2VbMvWbcvWdJObdcvUdszUd8vVeJaee87Yfc3WgJyjhqGnitDYjaarldPZnrK2oNbborW5o9bbo9fbpLa6q9ndrL3ArtndscDDutzfu8fJwN7gwt7gxc/QyuHhy+HizeHi0NfX0+Pj19zb1+Tj2uXk29/e3uLg3+Lh3+bl4uXj4ufl4+fl5Ofl5ufl5ujm5+jmySDnBAAAAFp0Uk5TAAECAgMEBAYHCA0NDg4UGRogIiMmKSssLzU7PkJJT1JTVFliY2hrdHZ3foSFhYeJjY2QkpugqbG1tre5w8zQ09XY3uXn6+zx8vT09vf4+Pj5+fr6/P39/f3+gz7SsAAAAVVJREFUOMtjYKA7EBDnwCPLrObS1BRiLoJLnte6CQy8FLHLCzs2QUG4FjZ5GbcmBDDjxJBXDWxCBrb8aM4zbkIDzpLYnAcE9VXlJSWlZRU13koIeW57mGx5XjoMZEUqwxWYQaQbSzLSkYGfKFSe0QMsX5WbjgY0YS4MBplemI4BdGBW+DQ11eZiymfqQuXZIjqwyadPNoSZ4L+0FVM6e+oGI6g8a9iKNT3o8kVzNkzRg5lgl7p4wyRUL9Yt2jAxVh6mQCogae6GmflI8p0r13VFWTHBQ0rWPW7ahgWVcPm+9cuLoyy4kCJDzCm6d8PSFoh0zvQNC5OjDJhQopPPJqph1doJBUD5tnkbZiUEqaCnB3bTqLTFG1bPn71kw4b+GFdpLElKIzRxxgYgWNYc5SCENVHKeUaltHdXx0dZ8uBI1hJ2UUDgq82CM2MwKeibqAvSO7MCABq0wXEPiqWEAAAAAElFTkSuQmCC"></a></li><li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li><li style="display: none;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li><li style="display: none;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li><li style="display: none;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li><li style="display: none;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li><li style="display: none;"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地图瓷砖©2017 </font></font><a href="http://developer.here.com/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE</font></font></a></li></ul><button type="button" title="归因"><span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一世</font></font></span></button></div></div></div></div>
+<select id="layer-select">
+  <option value="normal.day" selected=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">正常日</font></font></option>
+  <option value="normal.day.transit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">正常运输</font></font></option>
+  <option value="pedestrian.day"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">行人日</font></font></option>
+  <option value="terrain.day"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">地形日</font></font></option>
+  <option value="satellite.day"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">卫星日</font></font></option>
+  <option value="hybrid.day"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">混合日</font></font></option>
+</select>
+
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="span12">
+          <p id="shortdesc"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">来自HERE的地图图的示例。</font></font></p>
+          <div id="docs"><p><a href="https://developer.here.com/rest-apis/documentation/enterprise-map-tile"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE Map Tile API</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用</font></font><code>ol.source.XYZ</code><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p> <p><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">使用他们的瓦片API时，</font><font style="vertical-align: inherit;">请务必遵守</font></font><a href="https://legal.here.com/en/terms/serviceterms/us/"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">HERE服务条款</font></font></a><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">。</font></font></p>
+</div>
+          <div id="api-links"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">相关API文档： </font></font><ul class="inline"><li><a href="http://openlayers.org/en/latest/apidoc/ol.Map.html" title="ol.Map的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.Map</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.View.html" title="ol.View的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.View</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.layer.Tile.html" title="ol.layer.Tile的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.layer.Tile</font></font></a></li><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">，</font></font><li><a href="http://openlayers.org/en/latest/apidoc/ol.source.XYZ.html" title="ol.source.XYZ的API文档"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ol.source.XYZ</font></font></a></li></ul></div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div id="source-controls">
+          <a id="copy-button"><i class="fa fa-clipboard"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 复制</font></font></a>
+          <a id="codepen-button"><i class="fa fa-codepen"></i><font style="vertical-align: inherit;"><font style="vertical-align: inherit;"> 编辑</font></font></a>
+        </div>
+        <form method="POST" id="codepen-form" target="_blank" action="https://codepen.io/pen/define/">
+          <textarea class="hidden" name="title">HERE Map Tile API</textarea>
+          <textarea class="hidden" name="description">Example of a map with map tiles from HERE.</textarea>
+          <textarea class="hidden" name="js">var appId = 'Your HERE Maps appId from https://developer.here.com/';
+var appCode = 'Your HERE Maps appCode from https://developer.here.com/';
+var hereLayers = [
+  {
+    base: 'base',
+    type: 'maptile',
+    scheme: 'normal.day',
+    app_id: appId,
+    app_code: appCode
+  },
+  {
+    base: 'base',
+    type: 'maptile',
+    scheme: 'normal.day.transit',
+    app_id: appId,
+    app_code: appCode
+  },
+  {
+    base: 'base',
+    type: 'maptile',
+    scheme: 'pedestrian.day',
+    app_id: appId,
+    app_code: appCode
+  },
+  {
+    base: 'aerial',
+    type: 'maptile',
+    scheme: 'terrain.day',
+    app_id: appId,
+    app_code: appCode
+  },
+  {
+    base: 'aerial',
+    type: 'maptile',
+    scheme: 'satellite.day',
+    app_id: appId,
+    app_code: appCode
+  },
+  {
+    base: 'aerial',
+    type: 'maptile',
+    scheme: 'hybrid.day',
+    app_id: appId,
+    app_code: appCode
+  }
+];
+var urlTpl = 'https://{1-4}.{base}.maps.cit.api.here.com' +
+  '/{type}/2.1/maptile/newest/{scheme}/{z}/{x}/{y}/256/png' +
+  '?app_id={app_id}&amp;app_code={app_code}';
+var layers = [];
+var i, ii;
+for (i = 0, ii = hereLayers.length; i &lt; ii; ++i) {
+  var layerDesc = hereLayers[i];
+  layers.push(new ol.layer.Tile({
+    visible: false,
+    preload: Infinity,
+    source: new ol.source.XYZ({
+      url: createUrl(urlTpl, layerDesc),
+      attributions: 'Map Tiles &amp;copy; ' + new Date().getFullYear() + ' ' +
+        '&lt;a href="http://developer.here.com"&gt;HERE&lt;/a&gt;'
+    })
+  }));
+}
+
+var map = new ol.Map({
+  layers: layers,
+  // Improve user experience by loading tiles while dragging/zooming. Will make
+  // zooming choppy on mobile or slow devices.
+  loadTilesWhileInteracting: true,
+  target: 'map',
+  view: new ol.View({
+    center: [921371.9389, 6358337.7609],
+    zoom: 10
+  })
+});
+
+function createUrl(tpl, layerDesc) {
+  return tpl
+      .replace('{base}', layerDesc.base)
+      .replace('{type}', layerDesc.type)
+      .replace('{scheme}', layerDesc.scheme)
+      .replace('{app_id}', layerDesc.app_id)
+      .replace('{app_code}', layerDesc.app_code);
+}
+
+var select = document.getElementById('layer-select');
+function onChange() {
+  var scheme = select.value;
+  for (var i = 0, ii = layers.length; i &lt; ii; ++i) {
+    layers[i].setVisible(hereLayers[i].scheme === scheme);
+  }
+}
+select.addEventListener('change', onChange);
+onChange();
+</textarea>
+          <textarea class="hidden" name="css"></textarea>
+          <textarea class="hidden" name="html">&lt;div id="map" class="map"&gt;&lt;/div&gt;
+&lt;select id="layer-select"&gt;
+  &lt;option value="normal.day" selected&gt;Normal Day&lt;/option&gt;
+  &lt;option value="normal.day.transit"&gt;Normal Day Transit&lt;/option&gt;
+  &lt;option value="pedestrian.day"&gt;Pedestrian Day&lt;/option&gt;
+  &lt;option value="terrain.day"&gt;Terrain Day&lt;/option&gt;
+  &lt;option value="satellite.day"&gt;Satellite Day&lt;/option&gt;
+  &lt;option value="hybrid.day"&gt;Hybrid Day&lt;/option&gt;
+&lt;/select&gt;
+</textarea>
+          <input type="hidden" name="resources" value="https://openlayers.org/en/v4.4.2/css/ol.css,https://openlayers.org/en/v4.4.2/build/ol.js">
+          <input type="hidden" name="data">
+        </form>
+        <pre class=" language-markup"><code id="example-source" class=" language-markup"><span class="token doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>HERE Map Tile API<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>stylesheet<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/css/ol.css<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>text/css<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment" spellcheck="true">&lt;!-- The line below is only needed for old environments like Internet Explorer and Android 4.x --&gt;</span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://cdn.polyfill.io/v2/polyfill.min.js?features<span class="token punctuation">=</span>requestAnimationFrame,Element.prototype.classList,URL<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>https://openlayers.org/en/v4.4.2/build/ol.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>map<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>layer-select<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>normal.day<span class="token punctuation">"</span></span> <span class="token attr-name">selected</span><span class="token punctuation">&gt;</span></span>Normal Day<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>normal.day.transit<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Normal Day Transit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>pedestrian.day<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Pedestrian Day<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>terrain.day<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Terrain Day<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>satellite.day<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Satellite Day<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>option</span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>hybrid.day<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Hybrid Day<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>option</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+    <span class="token script language-javascript"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span>
+      <span class="token keyword">var</span> appId <span class="token operator">=</span> <span class="token string">'Your HERE Maps appId from https://developer.here.com/'</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> appCode <span class="token operator">=</span> <span class="token string">'Your HERE Maps appCode from https://developer.here.com/'</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> hereLayers <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'base'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'normal.day'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'base'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'normal.day.transit'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'base'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'pedestrian.day'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'aerial'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'terrain.day'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'aerial'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'satellite.day'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          base<span class="token punctuation">:</span> <span class="token string">'aerial'</span><span class="token punctuation">,</span>
+          type<span class="token punctuation">:</span> <span class="token string">'maptile'</span><span class="token punctuation">,</span>
+          scheme<span class="token punctuation">:</span> <span class="token string">'hybrid.day'</span><span class="token punctuation">,</span>
+          app_id<span class="token punctuation">:</span> appId<span class="token punctuation">,</span>
+          app_code<span class="token punctuation">:</span> appCode
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> urlTpl <span class="token operator">=</span> <span class="token string">'https://{1-4}.{base}.maps.cit.api.here.com'</span> <span class="token operator">+</span>
+        <span class="token string">'/{type}/2.1/maptile/newest/{scheme}/{z}/{x}/{y}/256/png'</span> <span class="token operator">+</span>
+        <span class="token string">'?app_id={app_id}&amp;app_code={app_code}'</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> layers <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> i<span class="token punctuation">,</span> ii<span class="token punctuation">;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> ii <span class="token operator">=</span> hereLayers<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> ii<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> layerDesc <span class="token operator">=</span> hereLayers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        layers<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>layer<span class="token punctuation">.</span>Tile</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          visible<span class="token punctuation">:</span> <span class="token keyword">false</span><span class="token punctuation">,</span>
+          preload<span class="token punctuation">:</span> <span class="token number">Infinity</span><span class="token punctuation">,</span>
+          source<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>source<span class="token punctuation">.</span>XYZ</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            url<span class="token punctuation">:</span> <span class="token function">createUrl</span><span class="token punctuation">(</span>urlTpl<span class="token punctuation">,</span> layerDesc<span class="token punctuation">)</span><span class="token punctuation">,</span>
+            attributions<span class="token punctuation">:</span> <span class="token string">'Map Tiles &amp;copy; '</span> <span class="token operator">+</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getFullYear</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">' '</span> <span class="token operator">+</span>
+              <span class="token string">'&lt;a href="http://developer.here.com"&gt;HERE&lt;/a&gt;'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">var</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>Map</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        layers<span class="token punctuation">:</span> layers<span class="token punctuation">,</span>
+        <span class="token comment" spellcheck="true">// Improve user experience by loading tiles while dragging/zooming. Will make</span>
+        <span class="token comment" spellcheck="true">// zooming choppy on mobile or slow devices.</span>
+        loadTilesWhileInteracting<span class="token punctuation">:</span> <span class="token keyword">true</span><span class="token punctuation">,</span>
+        target<span class="token punctuation">:</span> <span class="token string">'map'</span><span class="token punctuation">,</span>
+        view<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">ol<span class="token punctuation">.</span>View</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          center<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">921371.9389</span><span class="token punctuation">,</span> <span class="token number">6358337.7609</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+          zoom<span class="token punctuation">:</span> <span class="token number">10</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">function</span> <span class="token function">createUrl</span><span class="token punctuation">(</span>tpl<span class="token punctuation">,</span> layerDesc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> tpl
+            <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'{base}'</span><span class="token punctuation">,</span> layerDesc<span class="token punctuation">.</span>base<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'{type}'</span><span class="token punctuation">,</span> layerDesc<span class="token punctuation">.</span>type<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'{scheme}'</span><span class="token punctuation">,</span> layerDesc<span class="token punctuation">.</span>scheme<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'{app_id}'</span><span class="token punctuation">,</span> layerDesc<span class="token punctuation">.</span>app_id<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">'{app_code}'</span><span class="token punctuation">,</span> layerDesc<span class="token punctuation">.</span>app_code<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">var</span> select <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'layer-select'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">function</span> <span class="token function">onChange</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> scheme <span class="token operator">=</span> select<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> ii <span class="token operator">=</span> layers<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i <span class="token operator">&lt;</span> ii<span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          layers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">setVisible</span><span class="token punctuation">(</span>hereLayers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>scheme <span class="token operator">===</span> scheme<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      select<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'change'</span><span class="token punctuation">,</span> onChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">onChange</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span></code></pre>
+      </div>
+    </div>
+
+    <script src="./HERE Map Tile API_files/common.js.下载"></script>
+    <script src="./HERE Map Tile API_files/prism.min.js.下载"></script>
+    <script src="./HERE Map Tile API_files/loader.js.下载"></script><script type="text/javascript" src="./HERE Map Tile API_files/ol.js.下载"></script><script type="text/javascript" src="./HERE Map Tile API_files/here-maps.js.下载"></script>
+  
+  <script>
+  var packageUrl = 'https://raw.githubusercontent.com/openlayers/openlayers.github.io/build/package.json';
+  fetch(packageUrl).then(function(response) {
+    return response.json();
+  }).then(function(json) {
+    var latestVersion = json.version;
+    document.getElementById('latest-version').innerHTML = latestVersion;
+    var url = window.location.href;
+    var branchSearch = url.match(/\/([^\/]*)\/examples\//);
+    var cookieText = 'dismissed=-' + latestVersion + '-';
+    var dismissed = document.cookie.indexOf(cookieText) != -1;
+    if (!dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '4.4.2' != latestVersion) {
+      var link = url.replace(branchSearch[0], '/latest/examples/');
+      fetch(link, {method: 'head'}).then(function(response) {
+        var a = document.getElementById('latest-link');
+        a.href = response.status == 200 ? link : '../../latest/examples/';
+      });
+      var latestCheck = document.getElementById('latest-check');
+      latestCheck.style.display = '';
+      document.getElementById('latest-dismiss').onclick = function() {
+        latestCheck.style.display = 'none';
+        document.cookie = cookieText;
+      }
+    }
+  });
+  </script><div id="goog-gt-tt" class="skiptranslate" dir="ltr"><div style="padding: 8px;"><div><div class="logo"><img src="./HERE Map Tile API_files/translate_24dp.png" width="20" height="20" alt="Google 翻译"></div></div></div><div class="top" style="padding: 8px; float: left; width: 100%;"><h1 class="title gray">原文</h1></div><div class="middle" style="padding: 8px;"><div class="original-text"></div></div><div class="bottom" style="padding: 8px;"><div class="activity-links"><span class="activity-link">提供更好的翻译建议</span><span class="activity-link"></span></div><div class="started-activity-container"><hr style="color: #CCC; background-color: #CCC; height: 1px; border: none;"><div class="activity-root"></div></div></div><div class="status-message" style="display: none;"></div></div>
+
+<div class="goog-te-spinner-pos"><div class="goog-te-spinner-animation"><svg xmlns="http://www.w3.org/2000/svg" class="goog-te-spinner" width="96px" height="96px" viewBox="0 0 66 66"><circle class="goog-te-spinner-path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>
